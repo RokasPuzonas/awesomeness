@@ -1,138 +1,24 @@
-local beautiful = require("beautiful")
-local awful = require("awful")
-
-local preferences = {
-	terminal_cmd = "kitty",
-	editor = "nvim",
-	editor_cmd = "kitty -e nvim",
-	program_launcher_cmd = "rofi -show run",
-	web_browser_cmd = "brave",
-	file_manager_cmd = "pcmanfm",
-
-	dirs = {
-		downloads = os.getenv("XDG_DOWNLOAD_DIR") or "~/Downloads",
-		documents = os.getenv("XDG_DOCUMENTS_DIR") or "~/Documents",
-		music = os.getenv("XDG_MUSIC_DIR") or "~/Music",
-		pictures = os.getenv("XDG_PICTURES_DIR") or "~/Pictures",
-		videos = os.getenv("XDG_VIDEOS_DIR") or "~/Videos",
-		-- Make sure the directory exists so that your screenshots
-		-- are not lost
-		screenshots = os.getenv("XDG_SCREENSHOTS_DIR") or "~/Pictures/Screenshots",
-	},
-
-	tags = {"1", "2", "3", "4", "5", "6", "7", "8", "9"},
-
-	layouts = {
-    awful.layout.suit.floating,
-    awful.layout.suit.tile,
-    awful.layout.suit.tile.left,
-    awful.layout.suit.tile.bottom,
-    awful.layout.suit.tile.top,
-    awful.layout.suit.fair,
-    awful.layout.suit.fair.horizontal,
-    awful.layout.suit.spiral,
-    awful.layout.suit.spiral.dwindle,
-    awful.layout.suit.max,
-    awful.layout.suit.max.fullscreen,
-    awful.layout.suit.magnifier,
-    awful.layout.suit.corner.nw,
-    -- awful.layout.suit.corner.ne,
-    -- awful.layout.suit.corner.sw,
-    -- awful.layout.suit.corner.se,
-	}
-}
-
-local xrdb = beautiful.xresources.get_current_theme()
-local color_palette = {
-	background = xrdb.background,
-	foreground = xrdb.foreground,
-	color0     = xrdb.color0,
-	color1     = xrdb.color1,
-	color2     = xrdb.color2,
-	color3     = xrdb.color3,
-	color4     = xrdb.color4,
-	color5     = xrdb.color5,
-	color6     = xrdb.color6,
-	color7     = xrdb.color7,
-	color8     = xrdb.color8,
-	color9     = xrdb.color9,
-	color10    = xrdb.color10,
-	color11    = xrdb.color11,
-	color12    = xrdb.color12,
-	color13    = xrdb.color13,
-	color14    = xrdb.color14,
-	color15    = xrdb.color15,
-}
-
-local bindings = {
-	show_help                    = { "super+s"               , "show help"                            , "awesome"},
-	show_mainmenu                = { "super+w"               , "show main menu"                       , "awesome"},
-	quit_awesome                 = { "super+shift+q"         , "quit awesome"                         , "awesome"},
-	reload_awesome               = { "super+shift+r"         , "reload awesome"                       , "awesome"},
-
-	launch_terminal              = { "super+return"          , "launch terminal"                      , "system" },
-	program_launcher             = { "super+x"               , "program launcher"                     , "system" },
-	show_menubar                 = { "super+p"               , "show the menubar"                     , "system" },
-
-	kill_client                  = { "super+shift+c"         , "kill client"                          , "client" },
-	maximize_client              = { "super+m"               , "(un)maximize client"                  , "client" },
-	fullscreen_client            = { "super+f"               , "toggle fullscreen"                    , "client" },
-	minimize_client              = { "super+n"               , "minimize"                             , "client" },
-	maximize_vertically_client   = { "super+control+m"       , "(un)maximize vertically"              , "client" },
-	float_client                 = { "super+control+space"   , "toggle floating"                      , "client" },
-	move_client_to_master        = { "super+control+return"  , "move to master"                       , "client" },
-	move_client_to_screen        = { "super+o"               , "move to screen"                       , "client" },
-	keep_client_on_top           = { "super+t"               , "keep client on top"                   , "client" },
-	maximize_horizontally_client = { "super+shift+m"         , "(un)maximize horizontally"            , "client" },
-	focus_next_client            = { "super+j"               , "focus next by index"                  , "client" },
-	focus_prev_client            = { "super+k"               , "focus previous by index"              , "client" },
-	swap_with_next_client        = { "super+shift+j"         , "swap with next client by index"       , "client" },
-	swap_with_prev_client        = { "super+shift+k"         , "swap with previous client by index"   , "client" },
-	restore_minimized            = { "super+control+n"       , "restore minimized"                    , "client" },
-	jump_to_urgent_client        = { "super+u"               , "jump to urgent client"                , "client" },
-	go_back_client               = { "super+tab"             , "go back"                              , "client" },
-
-	focus_the_next_screen        = { "super+control+j"       , "focus the next screen"                , "screen" },
-	focus_the_previous_screen    = { "super+control+k"       , "focus the previous screen"            , "screen" },
-
-	increase_master_width        = { "super+l"               , "increase master width factor"         , "layout" },
-	decrease_master_width        = { "super+h"               , "decrease master width factor"         , "layout" },
-	increase_master_client_count = { "super+shift+h"         , "increase the number of master clients", "layout" },
-	decrease_master_client_count = { "super+shift+l"         , "decrease the number of master clients", "layout" },
-	increase_column_count        = { "super+control+h"       , "increase the number of columns"       , "layout" },
-	decrease_column_count        = { "super+control+l"       , "decrease the number of columns"       , "layout" },
-	select_next_layout           = { "super+space"           , "select next"                          , "layout" },
-	select_prev_layout           = { "super+shift+space"     , "select previous"                      , "layout" },
-
-	next_tag                     = { "super+right"           , "next tag"                             , "tag"    },
-	prev_tag                     = { "super+left"            , "previous tag"                         , "tag"    },
-	go_back_tag                  = { "super+escape"          , "go back a tag"                        , "tag"    },
-	view_tag                     = { "super+#?"              , "view tag #?"                          , "tag"    },
-	toggle_tag                   = { "super+control+#?"      , "toggle tag #?"                        , "tag"    },
-	move_client_to_tag           = { "super+shift+#?"        , "move client to tag #?"                , "tag"    },
-	toggle_client_on_tag         = { "super+control+shift+#?", "toggle client on tag #?"              , "tag"    },
-}
-
-
 -- If LuaRocks is installed, make sure that packages installed through it are
 -- found (e.g. lgi). If LuaRocks is not installed, do nothing.
 pcall(require, "luarocks.loader")
 
 -- Standard awesome library
 local gears = require("gears")
-local awful = require("awful")
 require("awful.autofocus")
 -- Widget and layout library
 local wibox = require("wibox")
 -- Theme handling library
-local beautiful = require("beautiful")
 -- Notification library
 local naughty = require("naughty")
 local menubar = require("menubar")
+local beautiful = require("beautiful")
+local awful = require("awful")
 local hotkeys_popup = require("awful.hotkeys_popup")
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
+
+local config = require("config")
 
 -- {{{ Error handling
 -- Handle runtime errors after startup
@@ -167,36 +53,38 @@ local superkey = "Mod4"
 local altkey = "Mod1"
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
-awful.layout.layouts = preferences.layouts
+awful.layout.layouts = config.layouts
 -- }}}
 
 -- {{{ Menu
 -- Create a launcher widget and a main menu
-myawesomemenu = {
+local	myawesomemenu = {
    { "hotkeys", function() hotkeys_popup.show_help(nil, awful.screen.focused()) end },
-   { "edit config", preferences.editor_cmd .. " " .. awesome.conffile },
+   { "edit config", config.editor_cmd .. " " .. awesome.conffile },
    { "restart", awesome.restart },
    { "quit", function() awesome.quit() end },
 }
 
-mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
-                                    { "open terminal", preferences.terminal_cmd }
-                                  }
-                        })
+local mymainmenu = awful.menu({
+    items = {
+        {'awesome', myawesomemenu, beautiful.awesome_icon},
+        {'open terminal', config.terminal_cmd}
+    }
+})
 
 mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
                                      menu = mymainmenu })
 
 -- Menubar configuration
-menubar.utils.terminal = preferences.terminal_cmd -- Set the terminal for applications that require it
+menubar.utils.terminal = config.terminal_cmd -- Set the terminal for applications that require it
 -- }}}
 
 -- {{{ Wibar
 -- Keyboard map indicator and switcher
-mykeyboardlayout = awful.widget.keyboardlayout()
+local mykeyboardlayout = awful.widget.keyboardlayout()
 
 -- Create a textclock widget
-mytextclock = wibox.widget.textclock()
+local mytextclock = wibox.widget.textclock()
 
 -- Create a wibox for each screen and add it
 local taglist_buttons = gears.table.join(
@@ -258,7 +146,7 @@ awful.screen.connect_for_each_screen(function(s)
     set_wallpaper(s)
 
     -- Each screen has its own tag table.
-    awful.tag(preferences.tags, s, awful.layout.layouts[1])
+    awful.tag(config.tags, s, awful.layout.layouts[1])
 
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
@@ -317,11 +205,33 @@ root.buttons(gears.table.join(
 -- }}}
 
 -- {{{ Key bindings
-local globalkeys = {}
-local function parse_binding(binding, func)
+-- Replaces patterns like "%{foobar}" from strings with the same name using values
+-- from data table
+local function replace_groups(str, data)
+	return str:gsub("%%%b{}", function(group)
+		local key = group:sub(3, -2)
+		local value = data[key]
+		if value == nil then return "" end
+		return tostring(value)
+	end)
+end
+
+local function replace_binding_groups(binding, binding_data)
+	local new_binding = {}
+	for k, v in pairs(binding) do
+		if type(v) == "string" then
+			new_binding[k] = replace_groups(v, binding_data)
+		else
+			new_binding[k] = v
+		end
+	end
+	return new_binding
+end
+
+local function parse_binding_key(key_string)
+	local key
 	local mod = {}
-	local key = nil
-	for k in binding[1]:gmatch("[^%s%+]+") do
+	for k in key_string:gmatch("[^%s%+]+") do
 		k = k:lower()
 		if k == "super" then
 			table.insert(mod, superkey)
@@ -337,45 +247,54 @@ local function parse_binding(binding, func)
 			key = k:gsub("^%l", string.upper)
 		end
 	end
+
+	return key, mod
+end
+
+local globalkeys = {}
+local function create_key_from_binding(binding, func)
+	local key, mod = parse_binding_key(binding[1])
 	return awful.key(mod, key, func, {description = binding[2], group = binding[3]})
 end
 
-do
-	local available_bindings = {}
-	local function try_appending_bindings(bindings_with_funcs)
-		for binding, func in pairs(bindings_with_funcs) do
-			table.insert(available_bindings, parse_binding(binding, func))
-		end
+local function create_keys_from_bindings(bindings_with_funcs)
+	local all_keys = {}
+	for binding, func in pairs(bindings_with_funcs) do
+		table.insert(all_keys, create_key_from_binding(binding, func))
 	end
+	return gears.table.join(table.unpack(all_keys))
+end
 
-	try_appending_bindings{
-		[bindings.show_help                    ] = hotkeys_popup.show_help,
-		[bindings.show_mainmenu                ] = function() mymainmenu:show() end,
-		[bindings.quit_awesome                 ] = awesome.quit,
-		[bindings.reload_awesome               ] = awesome.restart,
-		[bindings.launch_terminal              ] = function() awful.spawn(preferences.terminal_cmd) end,
-		[bindings.program_launcher             ] = function() awful.spawn(preferences.program_launcher_cmd) end,
-		[bindings.show_menubar                 ] = function() menubar.show() end,
-		[bindings.focus_next_client            ] = function () awful.client.focus.byidx( 1) end,
-		[bindings.focus_prev_client            ] = function () awful.client.focus.byidx(-1) end,
-		[bindings.swap_with_next_client        ] = function () awful.client.swap.byidx(  1) end,
-		[bindings.swap_with_prev_client        ] = function () awful.client.swap.byidx( -1) end,
-		[bindings.focus_the_next_screen        ] = function () awful.screen.focus_relative( 1) end,
-		[bindings.focus_the_previous_screen    ] = function () awful.screen.focus_relative(-1) end,
-		[bindings.jump_to_urgent_client        ] = awful.client.urgent.jumpto,
-		[bindings.go_back_client               ] = function () awful.client.focus.history.previous() if client.focus then client.focus:raise() end end,
-		[bindings.increase_master_width        ] = function () awful.tag.incmwfact( 0.05) end,
-		[bindings.decrease_master_width        ] = function () awful.tag.incmwfact(-0.05) end,
-		[bindings.increase_master_client_count ] = function () awful.tag.incnmaster( 1, nil, true) end,
-		[bindings.decrease_master_client_count ] = function () awful.tag.incnmaster(-1, nil, true) end,
-		[bindings.increase_column_count        ] = function () awful.tag.incncol( 1, nil, true) end,
-		[bindings.decrease_column_count        ] = function () awful.tag.incncol(-1, nil, true) end,
-		[bindings.select_next_layout           ] = function () awful.layout.inc( 1) end,
-		[bindings.select_prev_layout           ] = function () awful.layout.inc(-1) end,
-		[bindings.next_tag                     ] = awful.tag.viewnext,
-		[bindings.prev_tag                     ] = awful.tag.viewprev,
-		[bindings.go_back_tag                  ] = awful.tag.history.restore,
-    [bindings.restore_minimized            ] = function ()
+do
+	local b = config.bindings
+	globalkeys = create_keys_from_bindings{
+		[b.show_help                   ]= hotkeys_popup.show_help,
+		[b.show_mainmenu               ]= function() mymainmenu:show() end,
+		[b.quit_awesome                ]= awesome.quit,
+		[b.reload_awesome              ]= awesome.restart,
+		[b.launch_terminal             ]= function() awful.spawn(config.terminal_cmd) end,
+		[b.program_launcher            ]= function() awful.spawn(config.program_launcher_cmd) end,
+		[b.show_menubar                ]= function() menubar.show() end,
+		[b.focus_next_client           ]= function () awful.client.focus.byidx( 1) end,
+		[b.focus_prev_client           ]= function () awful.client.focus.byidx(-1) end,
+		[b.swap_with_next_client       ]= function () awful.client.swap.byidx(  1) end,
+		[b.swap_with_prev_client       ]= function () awful.client.swap.byidx( -1) end,
+		[b.focus_the_next_screen       ]= function () awful.screen.focus_relative( 1) end,
+		[b.focus_the_previous_screen   ]= function () awful.screen.focus_relative(-1) end,
+		[b.jump_to_urgent_client       ]= awful.client.urgent.jumpto,
+		[b.go_back_client              ]= function () awful.client.focus.history.previous() if client.focus then client.focus:raise() end end,
+		[b.increase_master_width       ]= function () awful.tag.incmwfact( 0.05) end,
+		[b.decrease_master_width       ]= function () awful.tag.incmwfact(-0.05) end,
+		[b.increase_master_client_count]= function () awful.tag.incnmaster( 1, nil, true) end,
+		[b.decrease_master_client_count]= function () awful.tag.incnmaster(-1, nil, true) end,
+		[b.increase_column_count       ]= function () awful.tag.incncol( 1, nil, true) end,
+		[b.decrease_column_count       ]= function () awful.tag.incncol(-1, nil, true) end,
+		[b.select_next_layout          ]= function () awful.layout.inc( 1) end,
+		[b.select_prev_layout          ]= function () awful.layout.inc(-1) end,
+		[b.next_tag                    ]= awful.tag.viewnext,
+		[b.prev_tag                    ]= awful.tag.viewprev,
+		[b.go_back_tag                 ]= awful.tag.history.restore,
+    [b.restore_minimized           ]= function ()
 				local c = awful.client.restore()
 				-- Focus restored client
 				if c then
@@ -384,65 +303,57 @@ do
 		end,
 	}
 
-	globalkeys = gears.table.join(table.unpack(available_bindings))
+	for i, tagname in ipairs(config.tags) do
+		local tag_data = { i = i, name = tagname }
+		local view_tag             = replace_binding_groups(b.view_tag, tag_data)
+		local toggle_tag           = replace_binding_groups(b.toggle_tag, tag_data)
+		local move_client_to_tag   = replace_binding_groups(b.move_client_to_tag, tag_data)
+		local toggle_client_on_tag = replace_binding_groups(b.toggle_client_on_tag, tag_data)
+
+		local tagkeys = create_keys_from_bindings{
+			[view_tag] = function()
+				local screen = awful.screen.focused()
+				local tag = screen.tags[i]
+				if tag then tag:view_only() end
+			end,
+			[toggle_tag] = function()
+				 local screen = awful.screen.focused()
+				 local tag = screen.tags[i]
+				 if tag then awful.tag.viewtoggle(tag) end
+			 end,
+			[move_client_to_tag] = function()
+				 if client.focus then
+					 local tag = client.focus.screen.tags[i]
+					 if tag then client.focus:move_to_tag(tag) end
+				 end
+			 end,
+			[toggle_client_on_tag] = function()
+				if client.focus then
+					local tag = client.focus.screen.tags[i]
+					if tag then client.focus:toggle_tag(tag) end
+				end
+			end
+		}
+
+		globalkeys = gears.table.join(globalkeys, tagkeys)
+	end
 end
 
 local clientkeys
 do
-	local available_bindings = {}
-	local function try_appending_bindings(bindings_with_funcs)
-		for binding, func in pairs(bindings_with_funcs) do
-			table.insert(available_bindings, parse_binding(binding, func))
-		end
-	end
-
-	try_appending_bindings{
-		[bindings.kill_client                  ] = function(c) c:kill() end,
-		[bindings.maximize_client              ] = function(c) c.maximized = not c.maximized end,
-		[bindings.fullscreen_client            ] = function(c) c.fullscreen = not c.fullscreen end,
-		[bindings.minimize_client              ] = function(c) c.minimized = true end,
-		[bindings.maximize_vertically_client   ] = function(c) c.maximized_vertical = not c.maximized_vertical; c:raise() end,
-		[bindings.float_client                 ] = awful.client.floating.toggle,
-		[bindings.move_client_to_master        ] = function(c) c:swap(awful.client.getmaster()) end,
-		[bindings.move_client_to_screen        ] = function(c) c.move_to_screeno() end,
-		[bindings.keep_client_on_top           ] = function (c) c.ontop = not c.ontop end,
-		[bindings.maximize_horizontally_client ] = function (c) c.maximized_horizontal = not c.maximized_horizontal c:raise() end,
+	local b = config.bindings
+	clientkeys = create_keys_from_bindings{
+		[b.kill_client                 ]= function(c) c:kill() end,
+		[b.maximize_client             ]= function(c) c.maximized = not c.maximized end,
+		[b.fullscreen_client           ]= function(c) c.fullscreen = not c.fullscreen end,
+		[b.minimize_client             ]= function(c) c.minimized = true end,
+		[b.maximize_vertically_client  ]= function(c) c.maximized_vertical = not c.maximized_vertical; c:raise() end,
+		[b.float_client                ]= awful.client.floating.toggle,
+		[b.move_client_to_master       ]= function(c) c:swap(awful.client.getmaster()) end,
+		[b.move_client_to_screen       ]= function(c) c.move_to_screeno() end,
+		[b.keep_client_on_top          ]= function (c) c.ontop = not c.ontop end,
+		[b.maximize_horizontally_client]= function (c) c.maximized_horizontal = not c.maximized_horizontal c:raise() end,
 	}
-
-	clientkeys = gears.table.join(table.unpack(available_bindings))
-
-	-- Bind all key numbers to tags.
-	-- Be careful: we use keycodes to make it work on any keyboard layout.
-	-- This should map on the top row of your keyboard, usually 1 to 9.
-	for i = 1, 9 do
-			globalkeys = gears.table.join(globalkeys, -- View tag only.
-			awful.key({superkey}, '#' .. i + 9, function()
-					local screen = awful.screen.focused()
-					local tag = screen.tags[i]
-					if tag then tag:view_only() end
-			end, {description = 'view tag #' .. i, group = 'tag'}),
-			 -- Toggle tag display.
-										awful.key({superkey, 'Control'}, '#' .. i + 9, function()
-					 local screen = awful.screen.focused()
-					 local tag = screen.tags[i]
-					 if tag then awful.tag.viewtoggle(tag) end
-			 end, {description = 'toggle tag #' .. i, group = 'tag'}),
-			 -- Move client to tag.
-										awful.key({superkey, 'Shift'}, '#' .. i + 9, function()
-					 if client.focus then
-							 local tag = client.focus.screen.tags[i]
-							 if tag then client.focus:move_to_tag(tag) end
-					 end
-			 end, {description = 'move focused client to tag #' .. i, group = 'tag'}),
-			 -- Toggle tag on focused client.
-										awful.key({superkey, 'Control', 'Shift'}, '#' .. i + 9,
-										 function()
-						if client.focus then
-								local tag = client.focus.screen.tags[i]
-								if tag then client.focus:toggle_tag(tag) end
-						end
-				end, {description = 'toggle focused client on tag #' .. i, group = 'tag'}))
-	end
 end
 
 local clientbuttons = gears.table.join(
