@@ -340,6 +340,26 @@ do
 		local move_client_to_tag   = replace_binding_groups(b.move_client_to_tag, tag_data)
 		local toggle_client_on_tag = replace_binding_groups(b.toggle_client_on_tag, tag_data)
 
+		-- Enabling this, only leaving descriptions on the first and last bindings,
+		-- This makes it that it only shows 1 binding per operation
+		if config.compress_tag_bindings then
+			if i == 1 or i == 9 then
+				local compressed_tag_data = {
+					i = ("%s/%s"):format(1, #config.tags),
+					name = ("%s/%s"):format(config.tags[1], config.tags[#config.tags])
+				}
+				view_tag[2] = replace_groups(b.view_tag[2], compressed_tag_data)
+				toggle_tag[2] = replace_groups(b.toggle_tag[2], compressed_tag_data)
+				move_client_to_tag[2] = replace_groups(b.move_client_to_tag[2], compressed_tag_data)
+				toggle_client_on_tag[2] = replace_groups(b.toggle_client_on_tag[2], compressed_tag_data)
+			else
+				view_tag[2] = nil
+				toggle_tag[2] = nil
+				move_client_to_tag[2] = nil
+				toggle_client_on_tag[2] = nil
+			end
+		end
+
 		local tagkeys = create_keys_from_bindings{
 			[view_tag] = function()
 				local screen = awful.screen.focused()
@@ -380,7 +400,7 @@ do
 		[b.maximize_vertically_client  ]= function(c) c.maximized_vertical = not c.maximized_vertical; c:raise() end,
 		[b.float_client                ]= awful.client.floating.toggle,
 		[b.move_client_to_master       ]= function(c) c:swap(awful.client.getmaster()) end,
-		[b.move_client_to_screen       ]= function(c) c.move_to_screeno() end,
+		[b.move_client_to_screen       ]= function(c) c:move_to_screen() end,
 		[b.keep_client_on_top          ]= function (c) c.ontop = not c.ontop end,
 		[b.maximize_horizontally_client]= function (c) c.maximized_horizontal = not c.maximized_horizontal c:raise() end,
 	}
@@ -470,8 +490,10 @@ if not config.no_titlebars then
 			}
 	end)
 
-	client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
-	client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+	if beautiful.border_width > 0 then
+		client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
+		client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+	end
 end
 
 -- Enable sloppy focus, so that focus follows mouse.
@@ -480,6 +502,16 @@ if config.sloppy_focus then
 		c:emit_signal("request::activate", "mouse_enter", {raise = false})
 	end)
 end
-
 -- }}}
+
+-- Garbage collection
+-- Enable for lower memory consumption
+-- From: https://github.com/elenapan/dotfiles/blob/master/config/awesome/rc.lua#L1129-L1137
+-- ===================================================================
+
+-- collectgarbage("setpause", 160)
+-- collectgarbage("setstepmul", 400)
+
+-- collectgarbage("setpause", 110)
+-- collectgarbage("setstepmul", 1000)
 

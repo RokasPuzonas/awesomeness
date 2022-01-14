@@ -11,6 +11,7 @@ config.file_manager_cmd = "pcmanfm"
 
 config.sloppy_focus = true
 config.no_titlebars = false
+config.compress_tag_bindings = true
 
 config.user_dirs = {
 	downloads   = os.getenv("XDG_DOWNLOAD_DIR") or "~/Downloads",
