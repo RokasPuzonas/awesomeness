@@ -2,8 +2,14 @@
 -- found (e.g. lgi). If LuaRocks is not installed, do nothing.
 pcall(require, "luarocks.loader")
 
--- Standard awesome library
+-- If luarocks is not installed, or a certain package is not installed.
+-- Use fallback from libs directory
 local gears = require("gears")
+local config_dir = gears.filesystem.get_configuration_dir()
+package.path = ("%s;%s/libs/?.lua"):format(package.path, config_dir)
+package.path = ("%s;%s/libs/?/init.lua"):format(package.path, config_dir)
+
+-- Standard awesome library
 require("awful.autofocus")
 -- Widget and layout library
 local wibox = require("wibox")
@@ -141,14 +147,10 @@ end
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", set_wallpaper)
 
-awful.screen.connect_for_each_screen(function(s)
-    -- Wallpaper
-    set_wallpaper(s)
-end)
+awful.screen.connect_for_each_screen(set_wallpaper)
 
 awful.screen.connect_for_each_screen(function(s)
-    -- Each screen has its own tag table.
-    awful.tag(config.tags, s, awful.layout.layouts[1])
+	awful.tag(config.tags, s, awful.layout.layouts[1])
 end)
 
 awful.screen.connect_for_each_screen(function(s)
@@ -180,6 +182,21 @@ awful.screen.connect_for_each_screen(function(s)
     -- Create the wibox
     s.mywibox = awful.wibar({ position = "top", screen = s })
 
+		-- Net
+		local lain  = require("lain")
+		local markup = lain.util.markup
+		local neticon = wibox.widget.imagebox(config_dir.."assets/icons/net.png")
+		local net = lain.widget.net({
+			settings = function(self, net_now)
+				local received = string.format("%06.1f", net_now.received)
+				local sent = string.format("%06.1f", net_now.sent)
+				self.markup = markup.font(beautiful.font,
+					markup("#7AC82E", " ⤓ " .. received) .. " " ..
+					markup("#46A8C3", " ⤒ " .. sent .. " ")
+				)
+			end
+		})
+
     -- Add widgets to the wibox
     s.mywibox:setup {
         layout = wibox.layout.align.horizontal,
@@ -192,11 +209,17 @@ awful.screen.connect_for_each_screen(function(s)
         s.mytasklist, -- Middle widget
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
+						spacing = 3,
             mykeyboardlayout,
             wibox.widget.systray(),
+						{
+							layout = wibox.layout.fixed.horizontal,
+							neticon,
+							net,
+						},
             mytextclock,
             s.mylayoutbox,
-        },
+        }
     }
 end)
 -- }}}
