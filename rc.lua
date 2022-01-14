@@ -16,7 +16,6 @@ local wibox = require("wibox")
 -- Theme handling library
 -- Notification library
 local naughty = require("naughty")
-local menubar = require("menubar")
 local beautiful = require("beautiful")
 local awful = require("awful")
 local hotkeys_popup = require("awful.hotkeys_popup")
@@ -84,8 +83,6 @@ local mylauncher = awful.widget.launcher({
     menu = mymainmenu
 })
 
--- Menubar configuration
-menubar.utils.terminal = config.terminal_cmd -- Set the terminal for applications that require it
 -- }}}
 
 -- {{{ Wibar
@@ -308,7 +305,6 @@ do
 		[b.reload_awesome              ]= awesome.restart,
 		[b.launch_terminal             ]= function() awful.spawn(config.terminal_cmd) end,
 		[b.program_launcher            ]= function() awful.spawn(config.program_launcher_cmd) end,
-		[b.show_menubar                ]= function() menubar.show() end,
 		[b.focus_next_client           ]= function () awful.client.focus.byidx( 1) end,
 		[b.focus_prev_client           ]= function () awful.client.focus.byidx(-1) end,
 		[b.swap_with_next_client       ]= function () awful.client.swap.byidx(  1) end,
