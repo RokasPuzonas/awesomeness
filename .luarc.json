@@ -1,7 +1,22 @@
 {
     "$schema": "https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json",
     "Lua.diagnostics.globals": [
+        "client",
+        "screen",
+        "root",
+
         "awesome",
-        "client"
+        "button",
+        "dbus",
+        "drawable",
+        "drawin",
+        "key",
+        "keygrabber",
+        "mousegrabber",
+        "selection",
+        "tag",
+        "window",
+        "table.unpack",
+        "math.atan2"
     ]
 }

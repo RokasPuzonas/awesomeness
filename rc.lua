@@ -299,6 +299,12 @@ do
 		[b.show_help                   ]= hotkeys_popup.show_help,
 		[b.show_mainmenu               ]= function() mymainmenu:show() end,
 		[b.quit_awesome                ]= awesome.quit,
+		[b.screenshot                  ]= function() awful.spawn.with_shell("maim -suq | xclip -selection clipboard -t image/png") end,
+		[b.save_screenshot             ]= function()
+			local date = os.date("%Y-%m-%d_%H:%M:%S")
+			local path = ("%s/%s.png"):format(config.user_dirs.screenshots, date:sub(1, -2))
+			awful.spawn.with_shell(("maim -suq %s && echo %s | xclip -selection clipboard"):format(path, path))
+		end,
 		[b.reload_awesome              ]= awesome.restart,
 		[b.launch_terminal             ]= function() awful.spawn(config.terminal_cmd) end,
 		[b.program_launcher            ]= function() awful.spawn(config.program_launcher_cmd) end,
