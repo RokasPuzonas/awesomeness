@@ -28,6 +28,7 @@ require("modules.wibar").connect()
 require("modules.bindings").connect()
 
 require("modules.rules").connect()
+require("awful.autofocus")
 
 require("modules.titlebars").connect()
 
