@@ -2,12 +2,12 @@ local config = {}
 
 config.theme = "default"
 
-config.terminal_cmd = "kitty"
-config.editor = "nvim"
-config.editor_cmd = "kitty -e nvim"
-config.program_launcher_cmd = "rofi -show run"
-config.web_browser_cmd = "brave"
-config.file_manager_cmd = "pcmanfm"
+config.terminal = "kitty"
+config.editor = os.getenv("EDITOR") or "nvim"
+config.editor_cmd = config.terminal.." -e "..config.editor
+config.program_launcher = "rofi -show run"
+config.web_browser = "brave"
+config.file_manager = "pcmanfm"
 
 config.sloppy_focus = true
 config.no_titlebars = false
