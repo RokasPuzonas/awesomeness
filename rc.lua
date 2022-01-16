@@ -19,17 +19,19 @@ local config = require("config")
 local beautiful = require("beautiful")
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
 
-require("modules.layouts")
+require("modules.layouts").connect()
 
-require("modules.wallpaper")
+require("modules.wallpaper").connect()
 
-require("modules.wibar")
+require("modules.wibar").connect()
 
-require("config.bindings")
+require("modules.bindings").connect()
 
-require("modules.titlebars")
+require("modules.rules").connect()
 
-require("modules.notifications")
+require("modules.titlebars").connect()
+
+require("modules.notifications").connect()
 
 if config.sloppy_focus then
 	client.connect_signal("mouse::enter", function(c)
