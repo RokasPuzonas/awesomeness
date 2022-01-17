@@ -4,29 +4,73 @@ local rnotification = require("ruled.notification")
 local dpi = xresources.apply_dpi
 
 local gfs = require("gears.filesystem")
-local themes_path = gfs.get_configuration_dir()
-local theme_path = themes_path.."/themes/arch-gruvbox/"
+local assets_path = gfs.get_configuration_dir().."/assets/"
+local theme_path = gfs.get_configuration_dir().."/themes/arch-gruvbox/"
 
 local theme = {}
 
 theme.font          = "Fantasque Sans Mono 10"
 
-theme.bg_normal     = "#222222"
-theme.bg_focus      = "#535d6c"
-theme.bg_urgent     = "#ff0000"
+-- http://www.chriskempson.com/projects/base16/
+-- Color scheme: "Gruvbox dark, medium"
+-- Color scheme author: "Dawid Kurek (dawikur@gmail.com), morhetz (https://github.com/morhetz/gruvbox)"
+theme.base16 = {
+	"#282828", -- 1  ----
+	"#3c3836", -- 2  ---
+	"#504945", -- 3  --
+	"#665c54", -- 4  -
+	"#bdae93", -- 5  +
+	"#d5c4a1", -- 6  ++
+	"#ebdbb2", -- 7  +++
+	"#fbf1c7", -- 8  ++++
+	"#fb4934", -- 9  red
+	"#fe8019", -- 10 orange
+	"#fabd2f", -- 11 yellow
+	"#b8bb26", -- 12 green
+	"#8ec07c", -- 13 aqua/cyan
+	"#83a598", -- 14 blue
+	"#d3869b", -- 15 purple
+	"#d65d0e", -- 16 brown
+}
+
+--[[
+theme.base16 = {
+	"#1d2021", -- ----
+	"#3c3836", -- ---
+	"#504945", -- --
+	"#665c54", -- -
+	"#bdae93", -- +
+	"#d5c4a1", -- ++
+	"#ebdbb2", -- +++
+	"#fbf1c7", -- ++++
+	"#fb4934", -- red
+	"#fe8019", -- orange
+	"#fabd2f", -- yellow
+	"#b8bb26", -- green
+	"#8ec07c", -- aqua/cyan
+	"#83a598", -- blue
+	"#d3869b", -- purple
+	"#d65d0e", -- brown
+}
+--]]
+
+theme.bg_normal     = theme.base16[1]
+theme.bg_focus      = theme.base16[4]
+theme.bg_urgent     = theme.base16[9]
 theme.bg_minimize   = "#444444"
 theme.bg_systray    = theme.bg_normal
 
-theme.fg_normal     = "#aaaaaa"
-theme.fg_focus      = "#ffffff"
-theme.fg_urgent     = "#ffffff"
-theme.fg_minimize   = "#ffffff"
+theme.fg_normal     = theme.base16[6]
+theme.fg_focus      = theme.base16[7]
+theme.fg_urgent     = theme.base16[7]
+theme.fg_minimize   = theme.base16[7]
 
 theme.useless_gap         = dpi(0)
 theme.border_width        = dpi(1)
 theme.border_color_normal = "#000000"
 theme.border_color_active = "#535d6c"
 theme.border_color_marked = "#91231c"
+
 
 -- There are other variable sets
 -- overriding the default one when
@@ -44,10 +88,10 @@ theme.border_color_marked = "#91231c"
 -- Generate taglist squares:
 local taglist_square_size = dpi(4)
 theme.taglist_squares_sel = theme_assets.taglist_squares_sel(
-    taglist_square_size, theme.fg_normal
+	taglist_square_size, theme.fg_normal
 )
 theme.taglist_squares_unsel = theme_assets.taglist_squares_unsel(
-    taglist_square_size, theme.fg_normal
+	taglist_square_size, theme.fg_normal
 )
 
 -- Variables set for theming notifications:
@@ -61,7 +105,7 @@ theme.taglist_squares_unsel = theme_assets.taglist_squares_unsel(
 -- menu_[border_color|border_width]
 theme.menu_submenu_icon = theme_path.."submenu.png"
 theme.menu_height = dpi(15)
-theme.menu_width  = dpi(100)
+theme.menu_width  = dpi(110)
 
 -- You can add as many variables as
 -- you wish and access them by using
@@ -116,9 +160,14 @@ theme.layout_cornerne = theme_path.."layouts/cornernew.png"
 theme.layout_cornersw = theme_path.."layouts/cornersww.png"
 theme.layout_cornerse = theme_path.."layouts/cornersew.png"
 
+theme.ram_icon = assets_path.."icons/ram.png"
+theme.ram_normal_fg = theme.base16[6]
+theme.ram_moderate_fg = theme.base16[11]
+theme.ram_high_fg = theme.base16[9]
+
 -- Generate Awesome icon:
 theme.awesome_icon = theme_assets.awesome_icon(
-    theme.menu_height, theme.bg_focus, theme.fg_focus
+	theme.menu_height, theme.bg_focus, theme.fg_focus
 )
 
 -- Define the icon theme for application icons. If not set then the icons
@@ -127,12 +176,13 @@ theme.icon_theme = nil
 
 -- Set different colors for urgent notifications.
 rnotification.connect_signal('request::rules', function()
-    rnotification.append_rule {
-        rule       = { urgency = 'critical' },
-        properties = { bg = '#ff0000', fg = '#ffffff' }
-    }
+	rnotification.append_rule {
+		rule       = { urgency = 'critical' },
+		properties = { bg = theme.base16[9], fg = '#ffffff' }
+	}
 end)
 
 return theme
 
--- vim: filetype=lua:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:textwidth=80
+-- vim: filetype=lua:noexpandtab:shiftwidth=2:tabstop=2:softtabstop=2:textwidth=80
+
