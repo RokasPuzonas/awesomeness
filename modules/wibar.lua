@@ -83,7 +83,7 @@ local function connect()
 	local my_keyboard_layout = awful.widget.keyboardlayout()
 
 	-- Create a textclock widget
-	local my_text_clock = wibox.widget.textclock()
+	local my_text_clock = wibox.widget.textclock("%Y-%m-%d %H:%M")
 
 	local ram_widget = Ram()
 
@@ -119,6 +119,7 @@ local function connect()
 				s.mytasklist, -- Middle widget
 				{ -- Right widgets
 					layout = wibox.layout.fixed.horizontal,
+					spacing = 5,
 					my_keyboard_layout,
 					wibox.widget.systray(),
 					ram_widget,
