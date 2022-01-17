@@ -33,16 +33,18 @@ local function new(options)
 	local original_icon = gears.surface.load_silently(beautiful.ram_icon)
 	local textbox = wibox.widget.textbox()
 	local textbox_wrapper = wibox.container.background(textbox)
-	local ram_icon = clone_image(original_icon)
+	local icon = clone_image(original_icon)
+	local icon_imagebox = wibox.widget.imagebox(icon)
 
 	-- Create main widget that will be returned
 	local self = wibox.layout.fixed.horizontal(
-		wibox.widget.imagebox(ram_icon), textbox_wrapper
+		icon_imagebox, textbox_wrapper
 	)
 
 	-- Save references to some of the child widgets
 	self.textbox_wrapper = textbox_wrapper
-	self.icon = ram_icon
+	self.icon = icon
+	self.icon_imagebox = icon_imagebox
 	self.original_icon = original_icon
 
 	self.high_threshold     = options.high_threshold or 0.8
@@ -77,8 +79,6 @@ function Ram:update_color(color)
 
 	-- Apply color to icon image
 	do
-		-- TODO: Is it fine to create a cairo context and then throw it out?
-		-- Should it be reused when you can?
 		local cr = cairo.Context(self.icon)
 		cr:set_operator(2) -- CAIRO_OPERATOR_OVER = 2
 		cr:set_source_surface(self.original_icon, 0, 0)
@@ -86,6 +86,7 @@ function Ram:update_color(color)
 		cr:set_source(gears.color(color))
 		cr:set_operator(5) -- CAIRO_OPERATOR_ATOP = 5
 		cr:paint()
+		self.icon_imagebox:emit_signal("widget::redraw_needed")
 	end
 end
 
