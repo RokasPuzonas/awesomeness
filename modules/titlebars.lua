@@ -42,6 +42,15 @@ local function connect()
 	client.connect_signal("request::titlebars", function(c)
 		awful.titlebar(c).widget = create_titlebar_widget(c)
 	end)
+
+	-- Show titlebars only for floating windows
+	client.connect_signal("property::floating", function(c)
+		if c.floating then
+			awful.titlebar.show(c)
+		else
+			awful.titlebar.hide(c)
+		end
+	end)
 end
 
 return { connect = connect }
