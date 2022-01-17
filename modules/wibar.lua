@@ -2,6 +2,8 @@ local awful = require("awful")
 local beautiful = require("beautiful")
 local wibox = require("wibox")
 local config = require("config")
+local main_menu = require("widgets.main-menu")
+local RamWidget = require("widgets.ram")
 
 local super = config.super
 
@@ -74,7 +76,7 @@ end
 local function connect()
 	local my_launcher = awful.widget.launcher{
 		image = beautiful.awesome_icon,
-		menu = require('modules.main-menu')
+		menu = main_menu
 	}
 
 	-- Keyboard map indicator and switcher
@@ -82,6 +84,8 @@ local function connect()
 
 	-- Create a textclock widget
 	local my_text_clock = wibox.widget.textclock()
+
+	local ram_widget = RamWidget()
 
 	screen.connect_signal('request::desktop_decoration', function(s)
 		-- Each screen has its own tag table.
@@ -117,6 +121,7 @@ local function connect()
 					layout = wibox.layout.fixed.horizontal,
 					my_keyboard_layout,
 					wibox.widget.systray(),
+					ram_widget,
 					my_text_clock,
 					s.mylayoutbox
 				}

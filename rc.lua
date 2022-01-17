@@ -17,7 +17,7 @@ require("modules.error-handling")
 local config = require("config")
 
 local beautiful = require("beautiful")
-beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
+beautiful.init(gears.filesystem.get_configuration_dir() .. "themes/".. config.theme .."/theme.lua")
 
 require("modules.layouts").connect()
 
@@ -33,6 +33,8 @@ require("awful.autofocus")
 require("modules.titlebars").connect()
 
 require("modules.notifications").connect()
+
+require("modules.auto-start").connect()
 
 if config.sloppy_focus then
 	client.connect_signal("mouse::enter", function(c)

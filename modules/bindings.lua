@@ -1,15 +1,16 @@
 local awful = require("awful")
 local config = require("config")
 local hotkeys_popup = require("awful.hotkeys_popup")
--- Enable hotkeys help widget for VIM and other apps
--- when client with a matching name is opened:
-require("awful.hotkeys_popup.keys").tmux.add_rules_for_terminal{rule ={name="tmux"}}
 
-local main_menu = require("modules.main-menu")
+local main_menu = require("widgets.main-menu")
 
 local super = config.super
 
 local function connect_global()
+	-- Enable hotkeys help widget for VIM and other apps
+	-- when client with a matching name is opened:
+	require("awful.hotkeys_popup.keys").tmux.add_rules_for_terminal{ rule = { name = "tmux" } }
+
 	-- Mouse bindings
 	awful.mouse.append_global_mousebindings({
 		awful.button({}, 3, function()

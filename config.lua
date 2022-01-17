@@ -1,6 +1,6 @@
 local config = {}
 
-config.theme = "default"
+config.theme = "arch-gruvbox"
 
 config.super = "Mod4"
 config.altkey = "Mod1"
@@ -16,7 +16,6 @@ config.file_manager = "pcmanfm"
 
 config.sloppy_focus = true
 config.no_titlebars = false
-config.compress_tag_bindings = true
 config.less_intensive_gc = false -- gc = garbage collector
 
 config.user_dirs = {

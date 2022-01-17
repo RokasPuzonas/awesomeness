@@ -6,17 +6,15 @@ local function connect()
 	screen.connect_signal('request::wallpaper', function(s)
 		awful.wallpaper{
 			screen = s,
+			bg = beautiful.wallpaper_bg,
 			widget = {
-				{
-					image = beautiful.wallpaper,
-					upscale = true,
-					downscale = true,
-					widget = wibox.widget.imagebox
-				},
-				valign = 'center',
-				halign = 'center',
-				tiled = false,
-				widget = wibox.container.tile
+				image = beautiful.wallpaper,
+				upscale = false,
+				downscale = true,
+				resize = true,
+				valign = "center",
+				halign = "center",
+				widget = wibox.widget.imagebox
 			}
 		}
 	end)
