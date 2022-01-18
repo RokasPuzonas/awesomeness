@@ -5,6 +5,8 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 local main_menu = require("widgets.main-menu")
 
 local super = config.super
+local ctrl = config.ctrl
+local shift = config.shift
 
 local function connect_global()
 	-- Enable hotkeys help widget for VIM and other apps
@@ -42,7 +44,15 @@ local function connect_global()
 		end, {
 			description = ('web browser \'%s\''):format(config.web_browser),
 			group = 'launcher'
-		})
+		}),
+		awful.key({super, ctrl}, "s", function()
+			awful.spawn.with_shell("maim -s | xclip -selection clipboard -t image/png")
+		end, { description = "take screenshot to clipboard", group = "launcher"}),
+		awful.key({super, shift}, "s", function()
+			local date = os.date("%Y-%m-%d_%H:%M:%S")
+			local path = ("%s/%s.png"):format(config.user_dirs.screenshots, date)
+			awful.spawn.with_shell(("maim -suq %s && printf '%s' | xclip -selection clipboard"):format(path, path))
+		end, { description = "take screenshot and save to file", group = "launcher"}),
 	})
 
 	-- Tags related keybindings

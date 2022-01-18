@@ -3,7 +3,7 @@ local config = {}
 config.theme = "arch-gruvbox"
 
 config.super = "Mod4"
-config.altkey = "Mod1"
+config.alt = "Mod1"
 config.shift = "Shift"
 config.ctrl = "Control"
 
