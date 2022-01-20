@@ -14,6 +14,10 @@ config.program_launcher = "rofi -show run"
 config.web_browser = "brave"
 config.file_manager = "pcmanfm"
 
+function config.edit_file_cmd(filename, dir)
+	return ("%s -d='%s' %s %s"):format(config.terminal, dir, config.editor, filename)
+end
+
 config.sloppy_focus = true
 config.no_titlebars = false
 config.less_intensive_gc = false -- gc = garbage collector
