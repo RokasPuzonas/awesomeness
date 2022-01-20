@@ -37,7 +37,6 @@ config.tags = {"1", "2", "3", "4", "5"}
 
 local suit = require("awful.layout.suit")
 config.layouts = {
-	suit.floating,
 	suit.tile,
 	suit.tile.left,
 	suit.tile.bottom,
@@ -50,6 +49,7 @@ config.layouts = {
 	suit.max.fullscreen,
 	suit.magnifier,
 	suit.corner.nw,
+	suit.floating,
 }
 
 return config
