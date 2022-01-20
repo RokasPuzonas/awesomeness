@@ -9,11 +9,9 @@ local gears = require("gears")
 local gtable = require("gears.table")
 local beautiful = require("beautiful")
 
-local lgi = require("lgi")
-local cairo = lgi.cairo
+local cairo = require("lgi").cairo
 
 local ram_signal = require("external-signal.ram")
-local ram_units = "MiB"
 
 local Ram = { mt = {} }
 
@@ -54,9 +52,9 @@ local function new(options)
 	gtable.crush(self, Ram, true)
 
 	-- Connect signal to get ram info
-	textbox:set_text(("??? %s"):format(ram_units))
-	awesome.connect_signal(ram_signal, function(used, total)
-		textbox:set_text(("%s/%s %s"):format(used, total, ram_units))
+	textbox:set_text("???")
+	awesome.connect_signal(ram_signal, function(used, total, units)
+		textbox:set_text(("%s/%s %s"):format(used, total, units))
 
 		local percent = used/total
 		if percent >= self.high_threshold and beautiful.ram_high_fg then
