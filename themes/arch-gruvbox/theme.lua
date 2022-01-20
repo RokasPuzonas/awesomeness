@@ -9,68 +9,44 @@ local theme_path = gfs.get_configuration_dir().."/themes/arch-gruvbox/"
 
 local theme = {}
 
-theme.font          = "Fantasque Sans Mono 10"
+theme.font = "Fantasque Sans Mono 10"
 
 -- http://www.chriskempson.com/projects/base16/
 -- Color scheme: "Gruvbox dark, medium"
 -- Color scheme author: "Dawid Kurek (dawikur@gmail.com), morhetz (https://github.com/morhetz/gruvbox)"
-theme.base16 = {
-	"#282828", -- 1  ----
-	"#3c3836", -- 2  ---
-	"#504945", -- 3  --
-	"#665c54", -- 4  -
-	"#bdae93", -- 5  +
-	"#d5c4a1", -- 6  ++
-	"#ebdbb2", -- 7  +++
-	"#fbf1c7", -- 8  ++++
-	"#fb4934", -- 9  red
-	"#fe8019", -- 10 orange
-	"#fabd2f", -- 11 yellow
-	"#b8bb26", -- 12 green
-	"#8ec07c", -- 13 aqua/cyan
-	"#83a598", -- 14 blue
-	"#d3869b", -- 15 purple
-	"#d65d0e", -- 16 brown
-}
+theme.black1 = "#282828" -- Default background
+theme.black2 = "#3c3836"
+theme.black3 = "#504945"
+theme.black4 = "#665c54"
+theme.white1 = "#bdae93"
+theme.white2 = "#d5c4a1" -- Default foreground
+theme.white3 = "#ebdbb2"
+theme.white4 = "#fbf1c7"
+theme.red    = "#fb4934"
+theme.orange = "#fe8019"
+theme.yellow = "#fabd2f"
+theme.green  = "#b8bb26"
+theme.cyan   = "#8ec07c"
+theme.blue   = "#83a598"
+theme.purple = "#d3869b"
+theme.brown  = "#d65d0e"
 
---[[
-theme.base16 = {
-	"#1d2021", -- ----
-	"#3c3836", -- ---
-	"#504945", -- --
-	"#665c54", -- -
-	"#bdae93", -- +
-	"#d5c4a1", -- ++
-	"#ebdbb2", -- +++
-	"#fbf1c7", -- ++++
-	"#fb4934", -- red
-	"#fe8019", -- orange
-	"#fabd2f", -- yellow
-	"#b8bb26", -- green
-	"#8ec07c", -- aqua/cyan
-	"#83a598", -- blue
-	"#d3869b", -- purple
-	"#d65d0e", -- brown
-}
---]]
-
-theme.bg_normal     = theme.base16[1]
-theme.bg_focus      = theme.base16[4]
-theme.bg_urgent     = theme.base16[9]
+theme.bg_normal     = theme.black1
+theme.bg_focus      = theme.black4
+theme.bg_urgent     = theme.red
 theme.bg_minimize   = "#444444"
 theme.bg_systray    = theme.bg_normal
 
-theme.fg_normal     = theme.base16[6]
-theme.fg_focus      = theme.base16[7]
-theme.fg_urgent     = theme.base16[7]
-theme.fg_minimize   = theme.base16[7]
+theme.fg_normal     = theme.white2
+theme.fg_focus      = theme.white3
+theme.fg_urgent     = theme.white3
+theme.fg_minimize   = theme.white3
 
 theme.useless_gap         = dpi(0)
 theme.border_width        = dpi(1)
-theme.border_color_normal = "#000000"
-theme.border_color_active = "#535d6c"
-theme.border_color_marked = "#91231c"
-
+theme.border_color_normal = theme.black1
+theme.border_color_active = theme.white1
+theme.border_color_marked = theme.red
 
 -- There are other variable sets
 -- overriding the default one when
@@ -161,9 +137,9 @@ theme.layout_cornersw = theme_path.."layouts/cornersww.png"
 theme.layout_cornerse = theme_path.."layouts/cornersew.png"
 
 theme.ram_icon = assets_path.."icons/ram.png"
-theme.ram_normal_fg = theme.base16[6]
-theme.ram_moderate_fg = theme.base16[11]
-theme.ram_high_fg = theme.base16[9]
+theme.ram_normal_fg = theme.white2
+theme.ram_moderate_fg = theme.yellow
+theme.ram_high_fg = theme.red
 
 -- Generate Awesome icon:
 theme.awesome_icon = theme_assets.awesome_icon(
@@ -178,7 +154,7 @@ theme.icon_theme = nil
 rnotification.connect_signal('request::rules', function()
 	rnotification.append_rule {
 		rule       = { urgency = 'critical' },
-		properties = { bg = theme.base16[9], fg = '#ffffff' }
+		properties = { bg = theme.red, fg = theme.white2 }
 	}
 end)
 
