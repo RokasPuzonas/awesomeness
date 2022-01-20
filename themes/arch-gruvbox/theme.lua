@@ -141,6 +141,12 @@ theme.ram_normal_fg = theme.white2
 theme.ram_moderate_fg = theme.yellow
 theme.ram_high_fg = theme.red
 
+theme.network_sent_icon = assets_path.."icons/network-sent.png"
+theme.network_received_icon = assets_path.."icons/network-received.png"
+theme.network_fg = theme.white2
+theme.network_sent_fg = theme.blue
+theme.network_received_fg = theme.green
+
 -- Generate Awesome icon:
 theme.awesome_icon = theme_assets.awesome_icon(
 	theme.menu_height, theme.bg_focus, theme.fg_focus

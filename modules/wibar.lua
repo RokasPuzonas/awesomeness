@@ -4,6 +4,7 @@ local wibox = require("wibox")
 local config = require("config")
 local main_menu = require("widgets.main-menu")
 local Ram = require("widgets.ram")
+local Network = require("widgets.network")
 
 local super = config.super
 
@@ -87,6 +88,8 @@ local function connect()
 
 	local ram_widget = Ram()
 
+	local network_widget = Network()
+
 	screen.connect_signal('request::desktop_decoration', function(s)
 		-- Each screen has its own tag table.
 		awful.tag(config.tags, s, awful.layout.layouts[1])
@@ -123,6 +126,7 @@ local function connect()
 					my_keyboard_layout,
 					wibox.widget.systray(),
 					ram_widget,
+					network_widget,
 					my_text_clock,
 					s.mylayoutbox
 				}
