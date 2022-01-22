@@ -49,4 +49,3 @@ else
 	collectgarbage("setpause", 110)
 	collectgarbage("setstepmul", 1000)
 end
-

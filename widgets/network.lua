@@ -8,7 +8,7 @@ local network_signal = require("external-signal.network")
 
 local Network = { mt = {} }
 
-local function loadImage(path, color)
+local function load_image_with_color(path, color)
 	local image = gears.surface.load_silently(path)
 	local cr = cairo.Context(image)
 	cr:set_source(gears.color(color))
@@ -25,8 +25,8 @@ local function new(options)
 	local sent_color = beautiful.network_sent_fg or beautiful.network_fg
 	local received_color = beautiful.network_received_fg or beautiful.network_fg
 
-	local received_icon = loadImage(beautiful.network_received_icon, received_color)
-	local sent_icon = loadImage(beautiful.network_sent_icon, sent_color)
+	local received_icon = load_image_with_color(beautiful.network_received_icon, received_color)
+	local sent_icon = load_image_with_color(beautiful.network_sent_icon, sent_color)
 
 	local self = wibox.layout.fixed.horizontal(
 		wibox.widget.imagebox(received_icon),

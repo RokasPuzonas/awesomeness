@@ -34,7 +34,7 @@ theme.brown  = "#d65d0e"
 theme.bg_normal     = theme.black1
 theme.bg_focus      = theme.black4
 theme.bg_urgent     = theme.red
-theme.bg_minimize   = "#444444"
+theme.bg_minimize   = theme.black1
 theme.bg_systray    = theme.bg_normal
 
 theme.fg_normal     = theme.white2
@@ -137,15 +137,20 @@ theme.layout_cornersw = theme_path.."layouts/cornersww.png"
 theme.layout_cornerse = theme_path.."layouts/cornersew.png"
 
 theme.ram_icon = assets_path.."icons/ram.png"
-theme.ram_normal_fg = theme.white2
-theme.ram_moderate_fg = theme.yellow
-theme.ram_high_fg = theme.red
+theme.ram_fg = theme.white2
+theme.ram_high_fg = theme.yellow
+theme.ram_critical_fg = theme.red
 
 theme.network_sent_icon = assets_path.."icons/network-sent.png"
 theme.network_received_icon = assets_path.."icons/network-received.png"
 theme.network_fg = theme.white2
 theme.network_sent_fg = theme.blue
 theme.network_received_fg = theme.green
+
+theme.cpu_temperature_icon = assets_path.."icons/cpu-temperature.png"
+theme.cpu_temperature_fg = theme.white2
+theme.cpu_temperature_high_fg = theme.yellow
+theme.cpu_temperature_critical_fg = theme.red
 
 -- Generate Awesome icon:
 theme.awesome_icon = theme_assets.awesome_icon(
@@ -167,4 +172,3 @@ end)
 return theme
 
 -- vim: filetype=lua:noexpandtab:shiftwidth=2:tabstop=2:softtabstop=2:textwidth=80
-
