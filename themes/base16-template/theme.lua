@@ -56,6 +56,8 @@ local function new(palette)
 
 	-- Extra convenience colors, because not all palette follow the
 	-- specification strictly
+	theme.bright_black  = palette.bright_black
+	theme.bright_white  = palette.bright_white
 	theme.bright_red    = palette.bright_red
 	theme.bright_orange = palette.bright_orange
 	theme.bright_yellow = palette.bright_yellow
@@ -99,6 +101,7 @@ local function new(palette)
 	-- Example:
 	--theme.taglist_bg_focus = "#ff0000"
 	theme.hotkeys_modifiers_fg = theme.black3
+	theme.taglist_fg_focus = theme.white3
 
 	-- Generate taglist squares:
 	local taglist_square_size = dpi(4)

@@ -14,6 +14,8 @@ local function connect()
 				resize = true,
 				valign = "center",
 				halign = "center",
+				horizontal_fit_policy = beautiful.wallpaper_stretch and "fit",
+				vertical_fit_policy   = beautiful.wallpaper_stretch and "fit",
 				widget = wibox.widget.imagebox
 			}
 		}
@@ -21,4 +23,3 @@ local function connect()
 end
 
 return { connect = connect }
-

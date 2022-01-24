@@ -1,6 +1,6 @@
 local config = {}
 
-config.theme = "arch-gruvbox"
+config.theme = "ascii-fox-srcery"
 
 config.super = "Mod4"
 config.alt = "Mod1"
@@ -53,4 +53,3 @@ config.layouts = {
 }
 
 return config
-
