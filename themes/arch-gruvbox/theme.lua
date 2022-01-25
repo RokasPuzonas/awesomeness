@@ -31,6 +31,7 @@ theme.wallpaper = theme_path.."wallpaper.png"
 theme.wallpaper_bg = "#272827"
 
 theme.kitty_theme = "Gruvbox Dark"
+theme.neovim_theme = {"gruvbox", "dark"}
 
 return theme
 

@@ -42,5 +42,6 @@ theme.wallpaper = theme_path.."wallpaper.png"
 theme.wallpaper_stretch = true
 
 theme.kitty_theme = "Srcery"
+theme.neovim_theme = "srcery"
 
 return theme

@@ -36,17 +36,29 @@ require("modules.notifications").connect()
 
 require("modules.auto-start").connect()
 
-if beautiful.kitty_theme then
-	local kitty = require("modules.apps.kitty")
-	kitty.set_theme(beautiful.kitty_theme)
-end
-
 if config.sloppy_focus then
 	client.connect_signal("mouse::enter", function(c)
 		c:activate { context = "mouse_enter", raise = false }
 	end)
 end
 
+-- Application specific configs
+if beautiful.kitty_theme then
+	local kitty = require("modules.apps.kitty")
+	kitty.set_theme(beautiful.kitty_theme)
+end
+
+if beautiful.neovim_theme then
+	local neovim = require("modules.apps.neovim")
+	if type(beautiful.neovim_theme) == "table" then
+		neovim.set_theme(beautiful.neovim_theme[1], beautiful.neovim_theme[2])
+	else
+		neovim.set_theme(beautiful.neovim_theme)
+	end
+	neovim.reload_instances()
+end
+
+-- Optional garbage collector optimization
 if config.less_intensive_gc then
 	collectgarbage("setpause", 160)
 	collectgarbage("setstepmul", 400)
