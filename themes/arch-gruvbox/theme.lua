@@ -30,6 +30,8 @@ theme.font = "Fantasque Sans Mono 10"
 theme.wallpaper = theme_path.."wallpaper.png"
 theme.wallpaper_bg = "#272827"
 
+theme.kitty_theme = "Gruvbox Dark"
+
 return theme
 
 -- vim: filetype=lua:noexpandtab:shiftwidth=2:tabstop=2:softtabstop=2:textwidth=80

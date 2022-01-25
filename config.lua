@@ -1,6 +1,7 @@
 local config = {}
 
 config.theme = "ascii-fox-srcery"
+-- config.theme = "arch-gruvbox"
 
 config.super = "Mod4"
 config.alt = "Mod1"

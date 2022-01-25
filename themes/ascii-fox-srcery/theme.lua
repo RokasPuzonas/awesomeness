@@ -41,4 +41,6 @@ theme.font = "Fantasque Sans Mono 10"
 theme.wallpaper = theme_path.."wallpaper.png"
 theme.wallpaper_stretch = true
 
+theme.kitty_theme = "Srcery"
+
 return theme

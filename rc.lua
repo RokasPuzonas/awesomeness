@@ -36,6 +36,11 @@ require("modules.notifications").connect()
 
 require("modules.auto-start").connect()
 
+if beautiful.kitty_theme then
+	local kitty = require("modules.apps.kitty")
+	kitty.set_theme(beautiful.kitty_theme)
+end
+
 if config.sloppy_focus then
 	client.connect_signal("mouse::enter", function(c)
 		c:activate { context = "mouse_enter", raise = false }

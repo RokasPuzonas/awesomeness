@@ -34,8 +34,8 @@ local function new(options)
 	end
 
 
-	self.high_threshold     = options.high_threshold or 0.8
-	self.critical_threshold = options.critical_threshold or 0.5
+	self.high_threshold     = options.high_threshold or 0.5
+	self.critical_threshold = options.critical_threshold or 0.8
 
 	-- Copy over all methods
 	gtable.crush(self, Ram, true)
