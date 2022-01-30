@@ -1,6 +1,7 @@
 local awful = require("awful")
 local config = require("config")
 local hotkeys_popup = require("awful.hotkeys_popup")
+local PlayerCTL = require("widgets.playerctl")
 
 local main_menu = require("widgets.main-menu")
 
@@ -184,6 +185,40 @@ local function connect_global()
 			end
 		}
 	})
+
+	-- Playerctl
+	awful.keyboard.append_global_keybindings({
+		awful.key{
+			modifiers = {ctrl, super},
+			key = "Down",
+			description = "play/pause track",
+			group = "playerctl",
+			on_press = function()
+				local playerctl = PlayerCTL.getController()
+				playerctl:play_pause()
+			end
+		},
+		awful.key{
+			modifiers = {ctrl, super},
+			key = "Right",
+			description = "next track",
+			group = "playerctl",
+			on_press = function()
+				local playerctl = PlayerCTL.getController()
+				playerctl:next()
+			end
+		},
+		awful.key{
+			modifiers = {ctrl, super},
+			key = "Left",
+			description = "previous track",
+			group = "playerctl",
+			on_press = function()
+				local playerctl = PlayerCTL.getController()
+				playerctl:previous()
+			end
+		}
+	})
 end
 
 local function connect_client()
@@ -248,4 +283,3 @@ local function connect()
 end
 
 return { connect = connect }
-

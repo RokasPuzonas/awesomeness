@@ -6,6 +6,7 @@ local main_menu = require("widgets.main-menu")
 local Ram = require("widgets.ram")
 local Network = require("widgets.network")
 local CpuTemperature = require("widgets.cpu-temperature")
+local PlayerCTL = require("widgets.playerctl")
 
 local super = config.super
 
@@ -93,6 +94,8 @@ local function connect()
 
 	local cpu_temperature = CpuTemperature()
 
+	local playerctl_widget = PlayerCTL()
+
 	screen.connect_signal('request::desktop_decoration', function(s)
 		-- Each screen has its own tag table.
 		awful.tag(config.tags, s, awful.layout.layouts[1])
@@ -128,6 +131,7 @@ local function connect()
 					spacing = 5,
 					my_keyboard_layout,
 					wibox.widget.systray(),
+					playerctl_widget,
 					cpu_temperature,
 					ram_widget,
 					network_widget,

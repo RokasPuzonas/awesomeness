@@ -1,0 +1,3 @@
+[submodule "libs/bling"]
+	path = libs/bling
+	url = https://github.com/BlingCorp/bling.git

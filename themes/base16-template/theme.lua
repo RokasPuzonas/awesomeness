@@ -8,7 +8,7 @@ local dpi = xresources.apply_dpi
 
 local gfs = require("gears.filesystem")
 local assets_path = gfs.get_configuration_dir().."/assets/"
-local icons_path =  assets_path.."/icons/"
+local icons_path =  assets_path.."icons/"
 
 local function new(palette)
 	assert(type(palette), "Expected to be given a table palette")
@@ -190,6 +190,12 @@ local function new(palette)
 	theme.cpu_temperature_fg = theme.white2
 	theme.cpu_temperature_high_fg = theme.yellow
 	theme.cpu_temperature_critical_fg = theme.red
+
+	theme.playerctl_icon = icons_path.."widgets/note.png"
+	theme.playerctl_default_art = icons_path.."default-playerctl-art.png"
+	theme.playerctl_ignore = "chromium"
+	theme.playerctl_fg = theme.white2
+	theme.playerctl_paused_fg = theme.yellow
 
 	-- Generate Awesome icon:
 	theme.awesome_icon = theme_assets.awesome_icon(
