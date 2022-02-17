@@ -197,6 +197,8 @@ local function new(palette)
 	theme.playerctl_fg = theme.white2
 	theme.playerctl_paused_fg = theme.yellow
 
+	theme.taskwarrior_icon = icons_path.."widgets/taskwarrior.png"
+
 	-- Generate Awesome icon:
 	theme.awesome_icon = theme_assets.awesome_icon(
 		theme.menu_height, theme.bg_focus, theme.fg_focus

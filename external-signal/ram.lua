@@ -20,4 +20,3 @@ easy_watch(ram_script, update_interval, function(stdout)
 end)
 
 return signal_name
-

@@ -54,6 +54,16 @@ local function connect_global()
 			local path = ("%s/%s.png"):format(config.user_dirs.screenshots, date)
 			awful.spawn.with_shell(("maim -suq %s && printf '%s' | xclip -selection clipboard"):format(path, path))
 		end, { description = "take screenshot and save to file", group = "launcher"}),
+		awful.key{
+			modifiers = {super},
+			key = "t",
+			description = "taskwarrior",
+			group = "launcher",
+			on_press = function()
+				awful.spawn.with_shell(config.taskwarrior_cmd)
+			end
+		},
+
 	})
 
 	-- Tags related keybindings

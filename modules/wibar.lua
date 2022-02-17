@@ -3,10 +3,12 @@ local beautiful = require("beautiful")
 local wibox = require("wibox")
 local config = require("config")
 local main_menu = require("widgets.main-menu")
+
 local Ram = require("widgets.ram")
 local Network = require("widgets.network")
 local CpuTemperature = require("widgets.cpu-temperature")
 local PlayerCTL = require("widgets.playerctl")
+local TaskWarrior = require("widgets.taskwarrior")
 
 local super = config.super
 
@@ -96,6 +98,10 @@ local function connect()
 
 	local playerctl_widget = PlayerCTL()
 
+	local taskwarrior = TaskWarrior{
+		open_command = config.taskwarrior_cmd
+	}
+
 	screen.connect_signal('request::desktop_decoration', function(s)
 		-- Each screen has its own tag table.
 		awful.tag(config.tags, s, awful.layout.layouts[1])
@@ -132,6 +138,7 @@ local function connect()
 					my_keyboard_layout,
 					wibox.widget.systray(),
 					playerctl_widget,
+					taskwarrior,
 					cpu_temperature,
 					ram_widget,
 					network_widget,

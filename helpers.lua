@@ -27,6 +27,20 @@ function helpers.easy_watch(command, timeout, callback)
 	return t
 end
 
+function helpers.easy_watch_with_shell(command, timeout, callback)
+	local t = timer{ timeout = timeout }
+	t:connect_signal("timeout", function()
+			t:stop()
+			spawn.easy_async_with_shell(command, function(stdout, stderr, exitreason, exitcode)
+				callback(stdout, stderr, exitreason, exitcode)
+				t:again()
+			end)
+	end)
+	t:start()
+	t:emit_signal("timeout")
+	return t
+end
+
 function helpers.easy_timer(timeout, callback)
 	return timer{
 		timeout = timeout,

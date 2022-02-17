@@ -11,6 +11,7 @@ config.ctrl = "Control"
 config.terminal = "kitty"
 config.editor = os.getenv("EDITOR") or "nvim"
 config.editor_cmd = config.terminal.." -e "..config.editor
+config.taskwarrior_cmd = config.terminal.." -e taskwarrior-tui"
 config.program_launcher = "rofi -show run"
 config.web_browser = "brave"
 config.file_manager = "pcmanfm"
