@@ -52,8 +52,7 @@ end
 
 function helpers.clone_image(img)
 	local cloned = cairo.ImageSurface.create(cairo.Format.ARGB32, img.width, img.height)
-	local cr = cairo.Context(img)
-	cr:set_operator(2) -- CAIRO_OPERATOR_OVER = 2
+	local cr = cairo.Context(cloned)
 	cr:set_source_surface(img, 0, 0)
 	cr:paint()
 	return cloned

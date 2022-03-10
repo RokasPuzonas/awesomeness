@@ -1,37 +1,25 @@
-local wibox = require("wibox")
 local awful = require("awful")
 local beautiful = require("beautiful")
 
-local task_signal = require("external-signal.task")
+local TextboxWithIcon = require("widgets.templates.textbox-with-icon")
 
-local TaskWarrior = { mt = {} }
+local task_signal = require("external-signal.task")
 
 local function new(options)
 	options = options or {}
-
-	local self
-	do
-		local textbox = wibox.widget.textbox()
-		local textbox_wrapper = wibox.container.background(textbox)
-		local icon_imagebox = wibox.widget.imagebox(beautiful.taskwarrior_icon)
-
-		textbox_wrapper.fg = beautiful.fg_normal
-		-- Create main widget that will be returned
-		self = wibox.layout.fixed.horizontal(
-			icon_imagebox, textbox_wrapper
-		)
-
-		-- Save references to some of the child widgets
-		self.textbox = textbox
-	end
+	local self = TextboxWithIcon{
+		icon = beautiful.taskwarrior_icon,
+		text = "?",
+		keep_icon_color = true
+	}
 
 	-- Connect signal to get ram info
-	self.textbox:set_text("?")
+	self:set_text("?")
 	awesome.connect_signal(task_signal, function(pending, overdue)
 		if overdue > 0 then
-			self.textbox:set_text(("!%s/%s"):format(overdue, pending))
+			self:set_text(("!%s/%s"):format(overdue, pending))
 		else
-			self.textbox:set_text(("%s"):format(pending))
+			self:set_text(("%s"):format(pending))
 		end
 	end)
 
@@ -44,8 +32,4 @@ local function new(options)
 	return self
 end
 
-function TaskWarrior.mt.__call(_, ...)
-	return new(...)
-end
-
-return setmetatable(TaskWarrior, TaskWarrior.mt)
+return new

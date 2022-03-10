@@ -1,60 +1,33 @@
 local wibox = require("wibox")
 local beautiful = require("beautiful")
-local gears = require("gears")
 
-local cairo = require("lgi").cairo
+local TextboxWithIcon = require("widgets.templates.textbox-with-icon")
 
 local network_signal = require("external-signal.network")
 
-local Network = { mt = {} }
+local function new()
+	local self = wibox.layout.fixed.horizontal()
+	self.sent_widget = TextboxWithIcon{
+		icon = beautiful.network_sent_icon,
+		text = ("%06.1f"):format(0),
+		color = beautiful.network_sent_fg or beautiful.network_fg
+	}
 
-local function load_image_with_color(path, color)
-	local image = gears.surface.load_silently(path)
-	local cr = cairo.Context(image)
-	cr:set_source(gears.color(color))
-	cr:set_operator(5) -- CAIRO_OPERATOR_ATOP = 5
-	cr:paint()
-	return image
-end
+	self.received_widget = TextboxWithIcon{
+		icon = beautiful.network_received_icon,
+		text = ("%06.1f"):format(0),
+		color = beautiful.network_received_fg or beautiful.network_fg
+	}
 
-local function new(options)
-	options = options or {}
+	self:add(self.sent_widget)
+	self:add(self.received_widget)
 
-	local sent_textbox = wibox.widget.textbox()
-	local received_textbox = wibox.widget.textbox()
-	local sent_color = beautiful.network_sent_fg or beautiful.network_fg
-	local received_color = beautiful.network_received_fg or beautiful.network_fg
-
-	local received_icon = load_image_with_color(beautiful.network_received_icon, received_color)
-	local sent_icon = load_image_with_color(beautiful.network_sent_icon, sent_color)
-
-	local self = wibox.layout.fixed.horizontal(
-		wibox.widget.imagebox(received_icon),
-		{
-			widget = wibox.container.background,
-			fg = received_color,
-			received_textbox
-		},
-		wibox.widget.imagebox(sent_icon),
-		{
-			widget = wibox.container.background,
-			fg = sent_color,
-			sent_textbox,
-		}
-	)
-
-	sent_textbox:set_text(("%06.1f"):format(0))
-	received_textbox:set_text(("%06.1f"):format(0))
 	awesome.connect_signal(network_signal, function(stats, units)
-		sent_textbox:set_text(("%06.1f %s"):format(stats.sent, units))
-		received_textbox:set_text(("%06.1f %s"):format(stats.received, units))
+		self.sent_widget:set_text(("%06.1f %s"):format(stats.sent, units))
+		self.received_widget:set_text(("%06.1f %s"):format(stats.received, units))
 	end)
 
 	return self
 end
 
-function Network.mt.__call(_, ...)
-	return new(...)
-end
-
-return setmetatable(Network, Network.mt)
+return new
