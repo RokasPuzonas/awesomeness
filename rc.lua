@@ -42,7 +42,7 @@ if config.sloppy_focus then
 	end)
 end
 
-require("bling.module.window_swallowing").start()
+-- require("bling.module.window_swallowing").start()
 
 -- Application specific configs
 if beautiful.kitty_theme then

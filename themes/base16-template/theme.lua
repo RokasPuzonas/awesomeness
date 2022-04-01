@@ -199,6 +199,10 @@ local function new(palette)
 
 	theme.taskwarrior_icon = icons_path.."widgets/taskwarrior.png"
 
+	theme.parent_filter_list = {"brave", "Gimp", "MultiMC", "jetbrains-idea-ce"}
+	theme.child_filter_list = { "Dragon" }
+	theme.swallowing_filter = true
+
 	-- Generate Awesome icon:
 	theme.awesome_icon = theme_assets.awesome_icon(
 		theme.menu_height, theme.bg_focus, theme.fg_focus
