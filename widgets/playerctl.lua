@@ -4,7 +4,9 @@ local playerctl_instance
 
 local TextboxWithIcon = require("widgets.templates.textbox-with-icon")
 
-local function getController()
+local PlayerCTL = {}
+
+function PlayerCTL.getController()
 	if not playerctl_instance then
 		local bling = require("bling")
 		playerctl_instance = bling.signal.playerctl.lib()
@@ -18,7 +20,7 @@ local function new(options)
 		icon = beautiful.playerctl_icon
 	}
 
-	self.controller = getController()
+	self.controller = PlayerCTL.getController()
 
 	-- Copy over all methods
 
@@ -60,4 +62,4 @@ local function new(options)
 	return self
 end
 
-return new
+return setmetatable(PlayerCTL, { __call = new })
