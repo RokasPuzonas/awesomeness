@@ -16,10 +16,10 @@ local function new(options)
 	-- Connect signal to get ram info
 	self:set_text("?")
 	awesome.connect_signal(task_signal, function(pending, overdue)
-		if overdue > 0 then
+		if overdue and overdue > 0 then
 			self:set_text(("!%s/%s"):format(overdue, pending))
 		else
-			self:set_text(("%s"):format(pending))
+			self:set_text(("%s"):format(pending or 0))
 		end
 	end)
 
