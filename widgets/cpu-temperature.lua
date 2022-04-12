@@ -10,16 +10,8 @@ local function new()
 		text = "??°C"
 	}
 
-	awesome.connect_signal(cpu_temperature_signal, function(current, high, critical)
-		self:set_text(("%.1f°C"):format(current));
-
-		if current >= critical and beautiful.cpu_temperature_critical_fg then
-			self:set_color(beautiful.cpu_temperature_critical_fg)
-		elseif current >= high and beautiful.cpu_temperature_high_fg then
-			self:set_color(beautiful.cpu_temperature_high_fg)
-		else
-			self:set_color(beautiful.cpu_temperature_fg)
-		end
+	awesome.connect_signal(cpu_temperature_signal, function(current)
+		self:set_text(("%.1f°C"):format(current))
 	end)
 
 	return self

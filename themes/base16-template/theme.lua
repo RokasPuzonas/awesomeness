@@ -187,9 +187,6 @@ local function new(palette)
 	theme.network_received_fg = theme.green
 
 	theme.cpu_temperature_icon = icons_path.."widgets/cpu-temperature.png"
-	theme.cpu_temperature_fg = theme.white2
-	theme.cpu_temperature_high_fg = theme.yellow
-	theme.cpu_temperature_critical_fg = theme.red
 
 	theme.playerctl_icon = icons_path.."widgets/note.png"
 	theme.playerctl_default_art = icons_path.."default-playerctl-art.png"
