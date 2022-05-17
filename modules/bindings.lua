@@ -9,6 +9,7 @@ local super = config.super
 local ctrl = config.ctrl
 local shift = config.shift
 
+
 local function connect_global()
 	-- Enable hotkeys help widget for VIM and other apps
 	-- when client with a matching name is opened:
@@ -46,13 +47,14 @@ local function connect_global()
 			description = ('web browser \'%s\''):format(config.web_browser),
 			group = 'launcher'
 		}),
-		awful.key({super, ctrl}, "s", function()
+		awful.key({super, shift}, "s", function()
 			awful.spawn.with_shell("maim -s | xclip -selection clipboard -t image/png")
 		end, { description = "take screenshot to clipboard", group = "launcher"}),
-		awful.key({super, shift}, "s", function()
+		awful.key({super, ctrl}, "s", function()
 			local date = os.date("%Y-%m-%d_%H:%M:%S")
 			local path = ("%s/%s.png"):format(config.user_dirs.screenshots, date)
-			awful.spawn.with_shell(("maim -suq %s && printf '%s' | xclip -selection clipboard"):format(path, path))
+			awful.spawn(("maim -suq %s"):format(path))
+			awful.spawn.with_shell(("printf '%s' | xclip -selection clipboard"):format(path))
 		end, { description = "take screenshot and save to file", group = "launcher"}),
 		awful.key{
 			modifiers = {super},
