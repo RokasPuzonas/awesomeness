@@ -8,7 +8,7 @@ config.alt = "Mod1"
 config.shift = "Shift"
 config.ctrl = "Control"
 
-config.terminal = "kitty"
+config.terminal = "kitty tmux new-session -A -s main"
 config.editor = os.getenv("EDITOR") or "nvim"
 config.editor_cmd = config.terminal.." -e "..config.editor
 config.taskwarrior_cmd = config.terminal.." -e taskwarrior-tui"
