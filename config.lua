@@ -8,6 +8,7 @@ config.alt = "Mod1"
 config.shift = "Shift"
 config.ctrl = "Control"
 
+config.editor = os.getenv("EDITOR") or "nvim"
 config.terminal = "kitty tmux new-session -A -s main"
 config.editor = os.getenv("EDITOR") or "nvim"
 config.editor_cmd = config.terminal.." -e "..config.editor
