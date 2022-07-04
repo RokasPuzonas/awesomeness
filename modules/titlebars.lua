@@ -1,5 +1,6 @@
-local awful = require("awful")
-local wibox = require("wibox")
+local awful     = require("awful")
+local wibox     = require("wibox")
+local beautiful = require("beautiful")
 
 local function create_titlebar_widget(c)
 	-- buttons for the titlebar
@@ -40,7 +41,10 @@ end
 
 local function connect()
 	client.connect_signal("request::titlebars", function(c)
-		awful.titlebar(c).widget = create_titlebar_widget(c)
+		local titlebar = awful.titlebar(c, {
+			size = beautiful.get_font_height() * 1.2
+		})
+		titlebar.widget = create_titlebar_widget(c)
 		if not c.floating then
 			awful.titlebar.hide(c)
 		end
@@ -56,4 +60,3 @@ local function connect()
 end
 
 return { connect = connect }
-

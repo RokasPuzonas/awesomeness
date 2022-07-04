@@ -1,5 +1,11 @@
 # Awesomeness
 
+Get id of next task:
+`task next | sed -n '4p' | awk '{print $1}`
+
+Get due date and description by id:
+`task _get $ID.due $ID.description`
+
 ## Special thanks <3
 * [elenapan's dotfiles](https://github.com/elenapan/dotfiles)
 * [javacage's dotfiles](https://github.com/JavaCafe01/dotfiles)
@@ -17,4 +23,3 @@ Libraries:
 * https://awesomewm.org/recipes/mic/
 * https://awesomewm.org/recipes/wirelessStatus/
 * https://awesomewm.org/recipes/watch/
-
