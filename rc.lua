@@ -12,6 +12,8 @@ local config_dir = gears.filesystem.get_configuration_dir()
 package.path = ("%s;%s/libs/?.lua"):format(package.path, config_dir)
 package.path = ("%s;%s/libs/?/init.lua"):format(package.path, config_dir)
 
+pprint = require("libs.pprint")
+
 require("modules.error-handling")
 
 local config = require("config")
@@ -25,7 +27,7 @@ require("modules.wallpaper").connect()
 
 require("modules.wibar").connect()
 
-require("modules.bindings").connect()
+require("modules.bindings")
 
 require("modules.rules").connect()
 require("awful.autofocus")
@@ -42,6 +44,8 @@ if config.sloppy_focus then
 	end)
 end
 
+-- beautiful.parent_filter_list = {"neovide", ""}
+-- beautiful.child_filter_list = {"neovide"}
 -- require("bling.module.window_swallowing").start()
 
 -- Application specific configs

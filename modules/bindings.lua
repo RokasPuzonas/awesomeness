@@ -9,289 +9,283 @@ local super = config.super
 local ctrl = config.ctrl
 local shift = config.shift
 
-
-local function connect_global()
-	-- Enable hotkeys help widget for VIM and other apps
-	-- when client with a matching name is opened:
-	require("awful.hotkeys_popup.keys").tmux.add_rules_for_terminal{ rule = { name = "tmux" } }
-
-	-- Mouse bindings
-	awful.mouse.append_global_mousebindings({
-		awful.button({}, 3, function()
-			main_menu:toggle()
-		end),
-		awful.button({}, 4, awful.tag.viewprev),
-		awful.button({}, 5, awful.tag.viewnext)
-	})
-
-	-- General Awesome keys
-	awful.keyboard.append_global_keybindings({
-		awful.key({super}, 's', hotkeys_popup.show_help,
-			{description = 'show help', group = 'awesome'}),
-		awful.key({super}, 'w', function()
-			main_menu:show()
-		end, {description = 'show main menu', group = 'awesome'}),
-		awful.key({super, 'Control'}, 'r', awesome.restart,
-			{description = 'reload awesome', group = 'awesome'}),
-		awful.key({super, 'Shift'}, 'q', awesome.quit,
-			{description = 'quit awesome', group = 'awesome'}),
-		awful.key({super}, 'Return', function()
-			awful.spawn(config.terminal)
-		end, {description = 'open a terminal', group = 'launcher'}),
-		awful.key({super}, 'p', function()
-			awful.spawn(config.program_launcher)
-		end, {description = 'program launcher', group = 'launcher'}),
-		awful.key({super}, 'q', function()
-			awful.spawn(config.web_browser)
-		end, {
-			description = ('web browser \'%s\''):format(config.web_browser),
-			group = 'launcher'
-		}),
-		awful.key({super, shift}, "s", function()
-			awful.spawn.with_shell("maim -s | xclip -selection clipboard -t image/png")
-		end, { description = "take screenshot to clipboard", group = "launcher"}),
-		awful.key({super, ctrl}, "s", function()
-			local date = os.date("%Y-%m-%d_%H:%M:%S")
-			local path = ("%s/%s.png"):format(config.user_dirs.screenshots, date)
-			awful.spawn(("maim -suq %s"):format(path))
-			awful.spawn.with_shell(("printf '%s' | xclip -selection clipboard"):format(path))
-		end, { description = "take screenshot and save to file", group = "launcher"}),
-		awful.key{
-			modifiers = {super},
-			key = "t",
-			description = "taskwarrior",
-			group = "launcher",
-			on_press = function()
-				awful.spawn.with_shell(config.taskwarrior_cmd)
+local function bindings(keybindings_tree)
+	local keybindings = {}
+	local trees = {keybindings_tree}
+	while #trees > 0 do
+		local tree = table.remove(trees)
+		for _, subtree in ipairs(tree) do
+			if type(subtree) == "table" and not subtree.binding then
+				table.insert(trees, subtree)
+			else
+				subtree.binding = nil
+				table.insert(keybindings, subtree)
 			end
-		},
+		end
+	end
+	return keybindings
+end
 
+local function group(group_name, keybindings)
+	for _, key in ipairs(keybindings) do
+		key.group = group_name
+	end
+	return keybindings
+end
+
+local function keybind(modifiers, key, description, on_press)
+	local keys = awful.key{
+		modifiers = modifiers,
+		key = key,
+		on_press = on_press,
+		description = description
+	}
+	keys.binding = true
+	return keys
+end
+
+local function keybind_grp(modifiers, keygroup, description, on_press)
+	local keys = awful.key{
+		modifiers = modifiers,
+		keygroup = keygroup,
+		on_press = on_press,
+		description = description
+	}
+	keys.binding = true
+	return keys
+end
+
+local function buttonbind(modifiers, key, on_press)
+	local btns = awful.button(modifiers, key, on_press)
+	btns.binding = true
+	return btns
+end
+
+local function launch_program(program)
+	return function() awful.spawn(program) end
+end
+
+local function launch_shell_program(program)
+	return function() awful.spawn.with_shell(program) end
+end
+
+local function screenshot_to_clipboard()
+	awful.spawn.with_shell("maim -s | xclip -selection clipboard -t image/png")
+end
+
+local function screenshot_to_file()
+		local date = os.date("%Y-%m-%d_%H:%M:%S")
+		local path = ("%s/%s.png"):format(config.user_dirs.screenshots, date)
+		awful.spawn(("maim -suq %s"):format(path))
+		awful.spawn.with_shell(("printf '%s' | xclip -selection clipboard"):format(path))
+end
+
+-- Enable hotkeys help widget for VIM and other apps
+-- when client with a matching name is opened:
+-- require("awful.hotkeys_popup.keys").tmux.add_rules_for_terminal{ rule = { name = "tmux" } }
+
+-- General Awesome keys
+awful.keyboard.append_global_keybindings(bindings{
+	group("awesome", {
+		keybind({super           }, "s", "show help",
+			hotkeys_popup.show_help),
+		keybind({super           }, "w", "show main menu",
+			function() main_menu:show() end),
+		keybind({super, ctrl     }, "r", "reload awesome",
+			awesome.restart),
+		keybind({super, shift    }, "q", "quit awesome",
+			awesome.quit),
+	}),
+	group("launcher", {
+		keybind({super       }, "Return", "open a terminal",
+			launch_program(config.terminal)),
+		keybind({super       }, "p"     , "program launcher",
+			launch_program(config.program_launcher)),
+		keybind({super       }, "q"     , "web browser",
+			launch_program(config.web_browser)),
+		keybind({super, shift}, "s"     , "take screenshot to clipboard",
+			screenshot_to_clipboard),
+		keybind({super, ctrl }, "s"     , "take screenshot and save to file",
+			screenshot_to_file),
+		keybind({super, shift}, "t"     , "taskwarrior",
+			launch_shell_program(config.taskwarrior_cmd))
 	})
+})
 
-	-- Tags related keybindings
-	awful.keyboard.append_global_keybindings({
-		awful.key({super}, 'Left', awful.tag.viewprev,
-			{description = 'view previous', group = 'tag'}),
-		awful.key({super}, 'Right', awful.tag.viewnext,
-			{description = 'view next', group = 'tag'}),
-		awful.key({super}, 'Escape', awful.tag.history.restore,
-			{description = 'go back', group = 'tag'})
-	})
+-- Mouse bindings
+awful.mouse.append_global_mousebindings(bindings{
+	buttonbind({}, 3, function() main_menu:toggle() end),
+	buttonbind({}, 4, awful.tag.viewprev),
+	buttonbind({}, 5, awful.tag.viewnext)
+})
 
-	-- Focus related keybindings
-	awful.keyboard.append_global_keybindings({
-		awful.key({super}, 'j', function()
+-- Tags related keybindings
+awful.keyboard.append_global_keybindings(bindings{ group("tag", {
+	keybind({super}, "Left"  , "view previous", awful.tag.viewprev),
+	keybind({super}, "Right" , "view next", awful.tag.viewnext),
+	keybind({super}, "Escape", "go back", awful.tag.history.restore)
+}) })
+
+-- Focus related keybindings
+awful.keyboard.append_global_keybindings(bindings{
+	group("client", {
+		keybind({super}, "j", "focus next by index", function()
 			awful.client.focus.byidx(1)
-		end, {description = 'focus next by index', group = 'client'}),
-		awful.key({super}, 'k', function()
+		end),
+		keybind({super}, "k", "focus previous by index", function()
 			awful.client.focus.byidx(-1)
-		end, {description = 'focus previous by index', group = 'client'}),
-		awful.key({super}, 'Tab', function()
+		end),
+		keybind({super}, "Tab", "go back", function()
 			awful.client.focus.history.previous()
 			if client.focus then client.focus:raise() end
-		end, {description = 'go back', group = 'client'}),
-		awful.key({super, 'Control'}, 'j', function()
-			awful.screen.focus_relative(1)
-		end, {description = 'focus the next screen', group = 'screen'}),
-		awful.key({super, 'Control'}, 'k', function()
-			awful.screen.focus_relative(-1)
-		end, {description = 'focus the previous screen', group = 'screen'}),
-		awful.key({super, 'Control'}, 'n', function()
+		end),
+		keybind({super, ctrl}, "n", "restore minimized", function()
 			local c = awful.client.restore()
 			-- Focus restored client
-			if c then c:activate{raise = true, context = 'key.unminimize'} end
-		end, {description = 'restore minimized', group = 'client'})
-	})
+			if c then c:activate{raise = true, context = "key.unminimize"} end
+		end),
+	}),
 
-	-- Layout related keybindings
-	awful.keyboard.append_global_keybindings({
-		awful.key({super, 'Shift'}, 'j', function()
+	group("screen", {
+		keybind({super, ctrl}, "k", "focus the previous screen", function()
+			awful.screen.focus_relative(-1)
+		end),
+		keybind({super, ctrl}, "j", "focus the next screen", function()
+			awful.screen.focus_relative(1)
+		end)
+	})
+})
+
+-- Layout related keybindings
+awful.keyboard.append_global_keybindings(bindings{
+	group("client", {
+		keybind({super, shift}, "j", "swap with next client by index", function()
 			awful.client.swap.byidx(1)
-		end, {description = 'swap with next client by index', group = 'client'}),
-		awful.key({super, 'Shift'}, 'k', function()
+		end),
+		keybind({super, "Shift"}, "k", "swap with previous client by index", function()
 			awful.client.swap.byidx(-1)
-		end, {description = 'swap with previous client by index', group = 'client'}),
-		awful.key({super}, 'u', awful.client.urgent.jumpto,
-			{description = 'jump to urgent client', group = 'client'}),
-		awful.key({super}, 'l', function()
+		end),
+		keybind({super}, "u", "jump to urgent client", awful.client.urgent.jumpto),
+	}),
+
+	group("layout", {
+		keybind({super}, "l", "increase master width factor", function()
 			awful.tag.incmwfact(0.05)
-		end, {description = 'increase master width factor', group = 'layout'}),
-		awful.key({super}, 'h', function()
+		end),
+		keybind({super}, "h", "decrease master width factor", function()
 			awful.tag.incmwfact(-0.05)
-		end, {description = 'decrease master width factor', group = 'layout'}),
-		awful.key({super, 'Shift'}, 'h', function()
+		end),
+		keybind({super, shift}, "h", "increase the number of master clients", function()
 			awful.tag.incnmaster(1, nil, true)
-		end, {description = 'increase the number of master clients', group = 'layout'}),
-		awful.key({super, 'Shift'}, 'l', function()
+		end),
+		keybind({super, shift}, "l", "decrease the number of master clients", function()
 			awful.tag.incnmaster(-1, nil, true)
-		end, {description = 'decrease the number of master clients', group = 'layout'}),
-		awful.key({super, 'Control'}, 'h', function()
+		end),
+		keybind({super, ctrl}, "h", "increase the number of columns", function()
 			awful.tag.incncol(1, nil, true)
-		end, {description = 'increase the number of columns', group = 'layout'}),
-		awful.key({super, 'Control'}, 'l', function()
+		end),
+		keybind({super, ctrl}, "l", "decrease the number of columns", function()
 			awful.tag.incncol(-1, nil, true)
-		end, {description = 'decrease the number of columns', group = 'layout'}),
-		awful.key({super}, 'space', function()
-			awful.layout.inc(1)
-		end, {description = 'select next', group = 'layout'}),
-		awful.key({super, 'Shift'}, 'space', function()
-			awful.layout.inc(-1)
-		end, {description = 'select previous', group = 'layout'})
+		end),
+		-- keybind({super}, "space", "select next", function()
+		-- 	awful.layout.inc(1)
+		-- end),
+		-- keybind({super, shift}, "space", "select previous", function()
+		-- 	awful.layout.inc(-1)
+		-- end)
 	})
+})
 
-	awful.keyboard.append_global_keybindings({
-		awful.key{
-			modifiers = {super},
-			keygroup = 'numrow',
-			description = 'only view tag',
-			group = 'tag',
-			on_press = function(index)
-				local screen = awful.screen.focused()
-				local tag = screen.tags[index]
-				if tag then tag:view_only() end
-			end
-		},
-		awful.key{
-			modifiers = {super, 'Control'},
-			keygroup = 'numrow',
-			description = 'toggle tag',
-			group = 'tag',
-			on_press = function(index)
-				local screen = awful.screen.focused()
-				local tag = screen.tags[index]
-				if tag then awful.tag.viewtoggle(tag) end
-			end
-		},
-		awful.key{
-			modifiers = {super, 'Shift'},
-			keygroup = 'numrow',
-			description = 'move focused client to tag',
-			group = 'tag',
-			on_press = function(index)
-				if client.focus then
-					local tag = client.focus.screen.tags[index]
-					if tag then client.focus:move_to_tag(tag) end
-				end
-			end
-		},
-		awful.key{
-			modifiers = {super, 'Control', 'Shift'},
-			keygroup = 'numrow',
-			description = 'toggle focused client on tag',
-			group = 'tag',
-			on_press = function(index)
-				if client.focus then
-					local tag = client.focus.screen.tags[index]
-					if tag then client.focus:toggle_tag(tag) end
-				end
-			end
-		},
-		awful.key{
-			modifiers = {super},
-			keygroup = 'numpad',
-			description = 'select layout directly',
-			group = 'layout',
-			on_press = function(index)
-				local t = awful.screen.focused().selected_tag
-				if t then t.layout = t.layouts[index] or t.layout end
-			end
-		}
-	})
+awful.keyboard.append_global_keybindings(bindings{ group("tag", {
+	keybind_grp({super}, 'numrow', 'only view tag', function(idx)
+		local screen = awful.screen.focused()
+		local tag = screen.tags[idx]
+		if tag then tag:view_only() end
+	end),
+	keybind_grp({super, ctrl}, 'numrow', 'toggle tag', function(idx)
+		local screen = awful.screen.focused()
+		local tag = screen.tags[idx]
+		if tag then awful.tag.viewtoggle(tag) end
+	end),
+	keybind_grp({super, shift}, 'numrow', 'move focused client to tag', function(idx)
+		if client.focus then
+			local tag = client.focus.screen.tags[idx]
+			if tag then client.focus:move_to_tag(tag) end
+		end
+	end),
+	keybind_grp({super, ctrl, shift}, 'numrow', 'toggle focused client on tag', function(idx)
+		if client.focus then
+			local tag = client.focus.screen.tags[idx]
+			if tag then client.focus:toggle_tag(tag) end
+		end
+	end),
+}) })
 
-	-- Playerctl
-	awful.keyboard.append_global_keybindings({
-		awful.key{
-			modifiers = {ctrl, super},
-			key = "Down",
-			description = "play/pause track",
-			group = "playerctl",
-			on_press = function()
-				local playerctl = PlayerCTL.getController()
-				playerctl:play_pause()
-			end
-		},
-		awful.key{
-			modifiers = {ctrl, super},
-			key = "Right",
-			description = "next track",
-			group = "playerctl",
-			on_press = function()
-				local playerctl = PlayerCTL.getController()
-				playerctl:next()
-			end
-		},
-		awful.key{
-			modifiers = {ctrl, super},
-			key = "Left",
-			description = "previous track",
-			group = "playerctl",
-			on_press = function()
-				local playerctl = PlayerCTL.getController()
-				playerctl:previous()
-			end
-		}
-	})
-end
-
-local function connect_client()
-	client.connect_signal('request::default_mousebindings', function()
-		awful.mouse.append_client_mousebindings({
-			awful.button({}, 1, function(c)
-				c:activate{context = 'mouse_click'}
-			end),
-			awful.button({super}, 1, function(c)
-				c:activate{context = 'mouse_click', action = 'mouse_move'}
-			end),
-			awful.button({super}, 3, function(c)
-				c:activate{context = 'mouse_click', action = 'mouse_resize'}
-			end)
-		})
+-- Playerctl
+awful.keyboard.append_global_keybindings(bindings{ group("playerctl", {
+	keybind({ctrl, super}, "Down", "play/pause track", function()
+		local playerctl = PlayerCTL.getController()
+		playerctl:play_pause()
+	end),
+	keybind({ctrl, super}, "Right", "next track", function()
+		local playerctl = PlayerCTL.getController()
+		playerctl:next()
+	end),
+	keybind({ctrl, super}, "Left", "previous track", function()
+		local playerctl = PlayerCTL.getController()
+		playerctl:previous()
 	end)
+}) })
 
-	client.connect_signal('request::default_keybindings', function()
-		awful.keyboard.append_client_keybindings({
-			awful.key({super}, 'f', function(c)
-				c.fullscreen = not c.fullscreen
-				c:raise()
-			end, {description = 'toggle fullscreen', group = 'client'}),
-			awful.key({super, 'Shift'}, 'c', function(c)
-				c:kill()
-			end, {description = 'close', group = 'client'}),
-			awful.key({super, 'Control'}, 'space', awful.client.floating.toggle,
-				{description = 'toggle floating', group = 'client'}),
-			awful.key({super, 'Control'}, 'Return', function(c)
-				c:swap(awful.client.getmaster())
-			end, {description = 'move to master', group = 'client'}),
-			awful.key({super}, 'o', function(c)
-				c:move_to_screen()
-			end, {description = 'move to screen', group = 'client'}),
-			awful.key({super}, 't', function(c)
-				c.ontop = not c.ontop
-			end, {description = 'toggle keep on top', group = 'client'}),
-			awful.key({super}, 'n', function(c)
-				-- The client currently has the input focus, so it cannot be
-				-- minimized, since minimized clients can't have the focus.
-				c.minimized = true
-			end, {description = 'minimize', group = 'client'}),
-			awful.key({super}, 'm', function(c)
-				c.maximized = not c.maximized
-				c:raise()
-			end, {description = '(un)maximize', group = 'client'}),
-			awful.key({super, 'Control'}, 'm', function(c)
-				c.maximized_vertical = not c.maximized_vertical
-				c:raise()
-			end, {description = '(un)maximize vertically', group = 'client'}),
-			awful.key({super, 'Shift'}, 'm', function(c)
-				c.maximized_horizontal = not c.maximized_horizontal
-				c:raise()
-			end, {description = '(un)maximize horizontally', group = 'client'})
-		})
+awful.keyboard.append_global_keybindings(bindings{
+	keybind({super}, "space", "switch keyboard layout", function()
+		awful.screen.kbd_layout:next_layout()
 	end)
-end
+})
 
-local function connect()
-	connect_global()
-	connect_client()
-end
+client.connect_signal('request::default_mousebindings', function()
+	awful.mouse.append_client_mousebindings(bindings{
+		buttonbind({}, 1, function(c)
+			c:activate{context = 'mouse_click'}
+		end),
+		buttonbind({super}, 1, function(c)
+			c:activate{context = 'mouse_click', action = 'mouse_move'}
+		end),
+		buttonbind({super}, 3, function(c)
+			c:activate{context = 'mouse_click', action = 'mouse_resize'}
+		end)
+	})
+end)
 
-return { connect = connect }
+client.connect_signal('request::default_keybindings', function()
+	awful.keyboard.append_client_keybindings(bindings{ group("client", {
+		keybind({super}, 'f', 'toggle fullscreen', function(c)
+			c.fullscreen = not c.fullscreen
+			c:raise()
+		end),
+		keybind({super, 'Shift'}, 'c', 'close', function(c) c:kill() end),
+		keybind({super, 'Control'}, 'space', 'toggle floating', awful.client.floating.toggle),
+		keybind({super, 'Control'}, 'Return', 'move to master', function(c)
+			c:swap(awful.client.getmaster())
+		end),
+		keybind({super}, 'o', 'move to screen', function(c) c:move_to_screen() end),
+		keybind({super}, 't', 'toggle keep on top', function(c) c.ontop = not c.ontop end),
+		keybind({super}, 'n', 'minimize', function(c)
+			-- The client currently has the input focus, so it cannot be
+			-- minimized, since minimized clients can't have the focus.
+			c.minimized = true
+		end),
+		keybind({super}, 'm', '(un)maximize', function(c)
+			c.maximized = not c.maximized
+			c:raise()
+		end),
+		keybind({super, 'Control'}, 'm', '(un)maximize vertically', function(c)
+			c.maximized_vertical = not c.maximized_vertical
+			c:raise()
+		end),
+		keybind({super, 'Shift'}, 'm', '(un)maximize horizontally', function(c)
+			c.maximized_horizontal = not c.maximized_horizontal
+			c:raise()
+		end)
+	}) })
+end)

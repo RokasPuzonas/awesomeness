@@ -82,10 +82,12 @@ local function new(palette)
 	theme.fg_urgent     = theme.white3
 	theme.fg_minimize   = theme.white3
 
-	theme.useless_gap         = dpi(0)
-	theme.border_width        = dpi(1)
+	theme.useless_gap         = dpi(3)
+	theme.gap_single_client   = false
+	theme.border_width        = dpi(2)
+	theme.border_radius       = dpi(20)
 	theme.border_color_normal = theme.black1
-	theme.border_color_active = theme.white1
+	theme.border_color_active = theme.bright_orange
 	theme.border_color_marked = theme.red
 
 	-- There are other variable sets
@@ -201,7 +203,7 @@ local function new(palette)
 	theme.swallowing_filter = true
 
 	-- Generate Awesome icon:
-	theme.awesome_icon = theme_assets.awesome_icon(
+	theme.logo_icon = theme_assets.awesome_icon(
 		theme.menu_height, theme.bg_focus, theme.fg_focus
 	)
 

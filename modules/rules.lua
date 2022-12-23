@@ -11,7 +11,8 @@ local function connect()
 				focus = awful.client.focus.filter,
 				raise = true,
 				screen = awful.screen.preferred,
-				placement = awful.placement.no_overlap + awful.placement.no_offscreen
+				placement = awful.placement.no_overlap + awful.placement.no_offscreen,
+				titlebars_enabled = false
 			}
 		}
 
@@ -32,7 +33,8 @@ local function connect()
 					'xtightvncviewer',
 					'Minecraft',
 					'zoom',
-					'love'
+					'love',
+					'ModernGL'
 				},
 				-- Note that the name property shown in xprop might be set slightly after creation of the client
 				-- and the name shown there might not match defined rules here.
@@ -45,14 +47,16 @@ local function connect()
 					'pop-up' -- e.g. Google Chrome's (detached) Developer Tools.
 				}
 			},
-			properties = {floating = true}
+			properties = {
+				floating = true
+			}
 		}
 
 		-- Add titlebars to normal clients and dialogs
 		ruled.client.append_rule{
 			id = 'titlebars',
 			rule_any = {type = {'normal', 'dialog'}},
-			properties = {titlebars_enabled = true}
+			-- properties = {titlebars_enabled = true}
 		}
 
 		-- Set Firefox to always map on the tag named "2" on screen 1.

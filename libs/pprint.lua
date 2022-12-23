@@ -14,11 +14,11 @@ pprint.defaults = {
     show_table = true,
     show_function = false,
     show_thread = false,
-    show_userdata = false,
+    show_userdata = true,
     -- additional display trigger
     show_metatable = false,     -- show metatable
     show_all = false,           -- override other show settings and show everything
-    use_tostring = false,       -- use __tostring to print table if available
+    use_tostring = true,       -- use __tostring to print table if available
     filter_function = nil,      -- called like callback(value[,key, parent]), return truty value to hide
     object_cache = 'local',     -- cache blob and table to give it a id, 'local' cache per print, 'global' cache
                                 -- per process, falsy value to disable (might cause infinite loop)
@@ -31,8 +31,9 @@ pprint.defaults = {
 }
 
 local TYPES = {
-    ['nil'] = 1, ['boolean'] = 2, ['number'] = 3, ['string'] = 4, 
-    ['table'] = 5, ['function'] = 6, ['thread'] = 7, ['userdata'] = 8
+    ['nil'] = 1, ['boolean'] = 2, ['number'] = 3, ['string'] = 4,
+    ['table'] = 5, ['function'] = 6, ['thread'] = 7, ['userdata'] = 8,
+		['key'] = 9
 }
 
 -- seems this is the only way to escape these, as lua don't know how to map char '\a' to 'a'
@@ -44,7 +45,7 @@ local ESCAPE_MAP = {
 -- generic utilities
 local function escape(s)
     s = s:gsub('([%c\\])', ESCAPE_MAP)
-    local dq = s:find('"') 
+    local dq = s:find('"')
     local sq = s:find("'")
     if dq and sq then
         return s:gsub('"', '\\"'), '"'
@@ -105,6 +106,7 @@ local function cache_apperance(obj, cache, option)
             cache.visited_tables[obj] = cache.visited_tables[obj] + 1
             return
         end
+				print(obj, type(obj))
         for k, v in pairs(obj) do
             cache_apperance(k, cache, option)
             cache_apperance(v, cache, option)
@@ -128,7 +130,7 @@ local function str_natural_cmp(lhs, rhs)
         if lsub ~= rsub then
             return lsub < rsub
         end
-        
+
         local lnum = tonumber(lhs:sub(lmid, lend))
         local rnum = tonumber(rhs:sub(rmid, rend))
         if lnum ~= rnum then
@@ -284,7 +286,7 @@ function pprint.pformat(obj, option, printer)
                     s = string.sub(s, seg+1)
                 end
                 _p(s) -- print the remaining parts
-                return ']]' 
+                return ']]'
             end
         end
 
@@ -336,7 +338,7 @@ function pprint.pformat(obj, option, printer)
         end
         for ix = 1,tlen do
             local v = t[ix]
-            if formatter[type(v)] == nop_formatter or 
+            if formatter[type(v)] == nop_formatter or
                (option.filter_function and option.filter_function(v, ix, t)) then
                -- pass
             else
@@ -364,7 +366,7 @@ function pprint.pformat(obj, option, printer)
         local function print_kv(k, v, t)
             -- can't use option.show_x as obj may contain custom type
             if formatter[type(v)] == nop_formatter or
-               formatter[type(k)] == nop_formatter or 
+               formatter[type(k)] == nop_formatter or
                (option.filter_function and option.filter_function(v, k, t)) then
                 return
             end
@@ -472,4 +474,3 @@ setmetatable(pprint, {
 })
 
 return pprint
-

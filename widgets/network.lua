@@ -19,8 +19,8 @@ local function new()
 		color = beautiful.network_received_fg or beautiful.network_fg
 	}
 
-	self:add(self.sent_widget)
 	self:add(self.received_widget)
+	self:add(self.sent_widget)
 
 	awesome.connect_signal(network_signal, function(stats, units)
 		self.sent_widget:set_text(("%06.1f %s"):format(stats.sent, units))
